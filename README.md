@@ -10,8 +10,12 @@ node-red-node-ui-table
 2. Call rate graphs by system
 <img src="/images/call-rate.png" width="600px">
 
-3. Unit and Talkgroup Affiliations
+3. Unit and talkgroup affiliations
 <img src="/images/unit-tracker.png" width="600px">
+
+3. Active calls and recorders
+<img src="/images/call-table.png" width="600px">
+
 For persistent data, it's recommended to save context storage to disk by editing the node-red `settings.js`:
 
 ```
