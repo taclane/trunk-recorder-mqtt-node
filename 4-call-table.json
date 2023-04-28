@@ -1,0 +1,516 @@
+[
+    {
+        "id": "36de031ff6913756",
+        "type": "tab",
+        "label": "Recorders & Calls",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3ee187ca1e7c77fa",
+        "type": "group",
+        "z": "36de031ff6913756",
+        "name": "Active Calls & Recorders",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "e077a1fd7774b673",
+            "458e044b84a0bf61",
+            "816f2b8081383fd3",
+            "e58ad2d8d0ee1dc5",
+            "97439d0fdd5a63d4",
+            "3201b07f5d35d45a",
+            "81efc56a59696d52",
+            "6a1a1a843081a284",
+            "d80dc9e3867ca58b",
+            "f7e487d148bf483e"
+        ],
+        "x": 54,
+        "y": 19,
+        "w": 592,
+        "h": 382
+    },
+    {
+        "id": "e077a1fd7774b673",
+        "type": "function",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Calls",
+        "func": "var dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nvar state = {\n       0: \"MONITORING\",\n       1: \"RECORDING\",\n       2: \"INACTIVE\",\n       3: \"ACTIVE\",\n       4: \"IDLE\",\n       5: \"COMPLETED\",\n       6: \"STOPPED\",\n       7: \"AVAILABLE\"\n};\n\nvar monState = {\n       0: \"MONITORING\",\n       1: \"UNKNOWN_TG\",\n       2: \"IGNORED_TG\",\n       3: \"NO_SOURCE\",\n       4: \"NO_RECORDER\",\n       5: \"ENCRYPTED\",\n       6: \"DUPLICATE\",\n       7: \"SUPERSEDED\"\n};\n\nconst sortmsg = {\n       payload: {\n              command: \"setSort\",\n              arguments: [[{ column: \"callNum\", dir: \"asc\" }]],\n              returnPromise: false\n       }\n};\n\n\nvar callData = flow.get(\"callData\");\nif (callData === undefined) {\n       callData = {};\n       flow.set(\"callData\", callData);\n}\n\nif (msg.payload.type == \"calls_active\") {\n       for (var i = 0; i < msg.payload.calls.length; i++) {\n              msg.payload.calls[i].freq = (msg.payload.calls[i].freq / 1000000).toFixed(6)\n              msg.payload.calls[i].state = state[msg.payload.calls[i].state]\n              msg.payload.calls[i].recState = state[msg.payload.calls[i].recState]\n              msg.payload.calls[i].monState = monState[msg.payload.calls[i].monState]\n              \n              callData[msg.payload.calls[i].callNum] = msg.payload.calls[i]\n       }\n}\n\nif (msg.payload.type == \"call_start\") {\n\n       var cnum = msg.payload.call.callNum\n\n       callData[cnum] = msg.payload.call\n\n       callData[cnum].freq = (msg.payload.call.freq / 1000000).toFixed(6)\n       callData[cnum].state = state[msg.payload.call.state]\n       callData[cnum].recState = state[msg.payload.call.recState]\n       callData[cnum].monState = monState[msg.payload.call.monState]\n}\n\nvar pruneTime = +new Date()\npruneTime = Math.round(pruneTime / 1000)\nfor (let i in callData) {\n       node.status({ fill: \"red\", shape: dots, text: pruneTime + \" : \" + callData[i].stopTime });\n       if ((callData[i].conventional == \"false\") && (callData[i].stopTime < pruneTime - 20)) {\n              delete callData[i]\n       } else if ((callData[i].conventional == \"false\") && (callData[i].stopTime < pruneTime - 25)) {\n              callData[i].state = \"STOPPED\"\n              callData[i].recNum = \"X\"\n              callData[i].srcNum = \"X\"\n       }\n}\n\nmsg.payload = Object.values(callData) \nflow.set(\"callData\", callData);\n\nreturn ([[msg, sortmsg]]);",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 240,
+        "wires": [
+            [
+                "458e044b84a0bf61"
+            ]
+        ]
+    },
+    {
+        "id": "458e044b84a0bf61",
+        "type": "ui_table",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "group": "fa2b9cb252fcf55f",
+        "name": "Calls",
+        "order": 2,
+        "width": 24,
+        "height": 7,
+        "columns": [
+            {
+                "field": "callNum",
+                "title": "Call",
+                "width": "75",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "shortName",
+                "title": "System",
+                "width": "75",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "recNum",
+                "title": "R",
+                "width": "50",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "srcNum",
+                "title": "S",
+                "width": "50",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "freq",
+                "title": "Freq",
+                "width": "100",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "talkgroup",
+                "title": "TG",
+                "width": "75",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "talkgrouptag",
+                "title": "TG Tag",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "srcId",
+                "title": "Source",
+                "width": "100",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "encrypted",
+                "title": "Encrypt",
+                "width": "100",
+                "align": "center",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "phase2",
+                "title": "P2",
+                "width": "100",
+                "align": "center",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "analog",
+                "title": "Analog",
+                "width": "100",
+                "align": "center",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "state",
+                "title": "CallState",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "recState",
+                "title": "RecS",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "monState",
+                "title": "Mon",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "elapsed",
+                "title": "Elap",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "length",
+                "title": "len",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 570,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "816f2b8081383fd3",
+        "type": "mqtt in",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "name": "MQTT In",
+        "topic": "server/status/recorder",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 60,
+        "wires": [
+            [
+                "97439d0fdd5a63d4"
+            ]
+        ]
+    },
+    {
+        "id": "e58ad2d8d0ee1dc5",
+        "type": "mqtt in",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "name": "MQTT In",
+        "topic": "server/status/recorders",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "97439d0fdd5a63d4"
+            ]
+        ]
+    },
+    {
+        "id": "97439d0fdd5a63d4",
+        "type": "function",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Recorders",
+        "func": "function roundToTwo(num) {\n    return +(Math.round(num + \"e+2\") + \"e-2\");\n}\n\nvar dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nconst sortmsg = {\n    payload: {\n        command: \"setSort\",\n        arguments: [[{ column: \"id\", dir: \"asc\" }]],\n        returnPromise: false\n    }\n};\n\nconst state = {\n    0: \"MONITORING\",\n    1: \"RECORDING\",\n    2: \"INACTIVE\",\n    3: \"ACTIVE\",\n    4: \"IDLE\",\n    5: \"COMPLETED\",\n    6: \"STOPPED\",\n    7: \"AVAILABLE\"\n};\n\nvar recData = flow.get(\"recData\");\nif (recData === undefined) {\n    recData = {};\n    flow.set(\"recData\", recData);\n}\n\n//var newmsg = {}\n\nif (msg.payload.type == \"recorders\") {\n    for (var i = 0; i < msg.payload.recorders.length; i++) {\n        msg.payload.recorders[i].state = state[msg.payload.recorders[i].state]\n        msg.payload.recorders[i].duration = roundToTwo(msg.payload.recorders[i].duration)\n        recData[msg.payload.recorders[i].id] = msg.payload.recorders[i]\n    }\n}\n\nif (msg.payload.type == \"recorder\") {\n    msg.payload.recorder.state = state[msg.payload.recorder.state]\n    msg.payload.recorder.duration = roundToTwo(msg.payload.recorder.duration)\n    recData[msg.payload.recorder.id] = msg.payload.recorder\n}\n\nvar newmsg = { payload: Object.values(recData) };\nnode.send([[newmsg, sortmsg]]);\nnode.status({ fill: \"red\", shape: dots, text: newmsg.payload.length });\nflow.set(\"recData\", recData);\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 120,
+        "wires": [
+            [
+                "3201b07f5d35d45a"
+            ]
+        ]
+    },
+    {
+        "id": "3201b07f5d35d45a",
+        "type": "ui_table",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "group": "fa2b9cb252fcf55f",
+        "name": "Recorders",
+        "order": 1,
+        "width": 24,
+        "height": 11,
+        "columns": [
+            {
+                "field": "id",
+                "title": "ID",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "type",
+                "title": "Type",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "srcNum",
+                "title": "Source",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "recNum",
+                "title": "Recorder",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "count",
+                "title": "Count",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "duration",
+                "title": "Duration",
+                "width": "",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "state",
+                "title": "RecState",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 550,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "81efc56a59696d52",
+        "type": "mqtt in",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "name": "MQTT In",
+        "topic": "server/status/call_start",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 300,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ]
+    },
+    {
+        "id": "6a1a1a843081a284",
+        "type": "mqtt in",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "name": "MQTT In",
+        "topic": "server/status/call_end",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 360,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ]
+    },
+    {
+        "id": "d80dc9e3867ca58b",
+        "type": "mqtt in",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "name": "MQTT In",
+        "topic": "server/status/calls_active",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 240,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ]
+    },
+    {
+        "id": "f7e487d148bf483e",
+        "type": "ui_ui_control",
+        "z": "36de031ff6913756",
+        "g": "3ee187ca1e7c77fa",
+        "name": "",
+        "events": "all",
+        "x": 140,
+        "y": 180,
+        "wires": [
+            [
+                "e077a1fd7774b673",
+                "97439d0fdd5a63d4"
+            ]
+        ]
+    },
+    {
+        "id": "fa2b9cb252fcf55f",
+        "type": "ui_group",
+        "name": "Calls",
+        "tab": "f3d0b12158ef2f71",
+        "order": 1,
+        "disp": true,
+        "width": 24,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "61de5090.0f5d9",
+        "type": "mqtt-broker",
+        "name": "Local MQTT Server",
+        "broker": "192.168.1.20",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "true",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f3d0b12158ef2f71",
+        "type": "ui_tab",
+        "name": "Calls",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    }
+]
