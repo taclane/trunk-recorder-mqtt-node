@@ -12,3 +12,18 @@ node-red-node-ui-table
 
 3. Unit and Talkgroup Affiliations
 <img src="/images/unit-tracker.png" width="600px">
+For persistent data, it's recommended to save context storage to disk by editing the node-red `settings.js`:
+
+```
+    contextStorage: {
+        default: {
+            module:"localfilesystem",
+            config: {
+                flushInterval: 60
+           }
+        },
+        memoryOnly: { 
+            module: 'memory' 
+        },
+    },
+```
