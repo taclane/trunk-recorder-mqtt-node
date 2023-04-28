@@ -1,0 +1,704 @@
+[
+    {
+        "id": "9e055a34fe489dca",
+        "type": "tab",
+        "label": "Calls",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "473a871ba87fbdfb",
+        "type": "group",
+        "z": "9e055a34fe489dca",
+        "name": "MQTT In / Sort By System",
+        "style": {
+            "label": true,
+            "fill": "#ffC000",
+            "fill-opacity": "0.35",
+            "color": "#000000"
+        },
+        "nodes": [
+            "55bf4e98669a42c3",
+            "9a74e64faff3ba70",
+            "dc9fd2e4ff7ff2d7",
+            "0d7997594d8439a3",
+            "f1da1fc229689158"
+        ],
+        "x": 34,
+        "y": 19,
+        "w": 612,
+        "h": 122
+    },
+    {
+        "id": "33daade83f7dfc86",
+        "type": "group",
+        "z": "9e055a34fe489dca",
+        "name": "Charts",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "cb56707051a9cf85",
+            "b40471e7163d4186",
+            "dd8b3b996b62d762",
+            "980e96e3c7d91bbb",
+            "d584ff241745b444",
+            "a0f163f8abd3e147",
+            "1b6bc51e2e6f0edf",
+            "02873d08e3557ed1",
+            "708242a7c469610c"
+        ],
+        "x": 34,
+        "y": 159,
+        "w": 612,
+        "h": 202
+    },
+    {
+        "id": "70f3387673fc2fec",
+        "type": "group",
+        "z": "9e055a34fe489dca",
+        "name": "Min/Max/Avg",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "529cfce6d53a2c46",
+            "7cf511fd541361e3",
+            "6769e3c36a0bb664",
+            "fc43ffab96b31188",
+            "2df186c56c12735c",
+            "379b743af27c5f06",
+            "021e07256c5f844b"
+        ],
+        "x": 34,
+        "y": 379,
+        "w": 612,
+        "h": 202
+    },
+    {
+        "id": "55bf4e98669a42c3",
+        "type": "mqtt in",
+        "z": "9e055a34fe489dca",
+        "g": "473a871ba87fbdfb",
+        "name": "MQTT In",
+        "topic": "server/status/calls_active",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 60,
+        "wires": [
+            [
+                "0d7997594d8439a3",
+                "f1da1fc229689158"
+            ]
+        ]
+    },
+    {
+        "id": "9a74e64faff3ba70",
+        "type": "link out",
+        "z": "9e055a34fe489dca",
+        "g": "473a871ba87fbdfb",
+        "name": "Total Calls",
+        "mode": "link",
+        "links": [
+            "3d60ee395ccb54ec",
+            "fc43ffab96b31188"
+        ],
+        "x": 550,
+        "y": 60,
+        "wires": [],
+        "inputLabels": [
+            "All"
+        ],
+        "l": true
+    },
+    {
+        "id": "dc9fd2e4ff7ff2d7",
+        "type": "link out",
+        "z": "9e055a34fe489dca",
+        "g": "473a871ba87fbdfb",
+        "name": "System Calls",
+        "mode": "link",
+        "links": [
+            "980e96e3c7d91bbb"
+        ],
+        "x": 550,
+        "y": 100,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "0d7997594d8439a3",
+        "type": "function",
+        "z": "9e055a34fe489dca",
+        "g": "473a871ba87fbdfb",
+        "name": "Count Calls",
+        "func": "// Record system number/shortname mapping\nvar systems = global.get(\"systems\");\nif (systems === undefined) {\n    systems = {};\n    global.set(\"systems\", systems);\n}\n\n// Count calls by shortname\nvar call3 = {};\nfor (var i = 0; i < msg.payload.calls.length; i++) {\n    var name = msg.payload.calls[i].shortName\n    var sys = msg.payload.calls[i].sysNum\n\n    if (!call3[name]) {\n        call3[name] = 0;\n    }\n    call3[name] = call3[name] + 1;\n\n    systems[sys] = name;\n}\n\n// Generate payload by shortname\nvar msgBySys = []\nvar callStatus = \"\"\n\nfor (let k in call3) {\n    var system = k\n    var callcount = Number(call3[k])\n    var status = system + \":\" + callcount\n    callStatus = (callStatus == \"\") ? status : callStatus + \", \" + status;\n    msgBySys.push({ payload: callcount, topic: system });\n}\n\n// Generate payload for all calls\nvar len = Object.keys(msg.payload.calls).length;\nvar msgAll = {}\nmsgAll.payload = len\nmsgAll.topic = \"all\"\n\nvar dots = context.get(\"dots\");\ndots = (dots==undefined)||(dots==\"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nnode.status({ fill: \"green\", shape: dots, text: callStatus });\nnode.send([msgAll, msgBySys]);\nreturn [, msgAll];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({fill:\"yellow\",shape:\"dot\",text:\"waiting\"});",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 100,
+        "wires": [
+            [
+                "9a74e64faff3ba70"
+            ],
+            [
+                "dc9fd2e4ff7ff2d7"
+            ]
+        ]
+    },
+    {
+        "id": "cb56707051a9cf85",
+        "type": "ui_chart",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "Calls Per Minute",
+        "group": "76f0c0df11c2ed51",
+        "order": 7,
+        "width": 9,
+        "height": 8,
+        "label": "Calls Per Minute",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm",
+        "interpolate": "step",
+        "nodata": "Calls",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 540,
+        "y": 200,
+        "wires": [
+            []
+        ],
+        "inputLabels": [
+            "Calls"
+        ]
+    },
+    {
+        "id": "b40471e7163d4186",
+        "type": "ui_chart",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "Calls Per Hour",
+        "group": "76f0c0df11c2ed51",
+        "order": 2,
+        "width": 15,
+        "height": 8,
+        "label": "Calls Per Hour",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm",
+        "interpolate": "step",
+        "nodata": "Calls",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 540,
+        "y": 240,
+        "wires": [
+            []
+        ],
+        "inputLabels": [
+            "Calls"
+        ]
+    },
+    {
+        "id": "dd8b3b996b62d762",
+        "type": "ui_chart",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "Calls Per Day",
+        "group": "76f0c0df11c2ed51",
+        "order": 8,
+        "width": 15,
+        "height": 8,
+        "label": "Calls Per Day",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm",
+        "interpolate": "step",
+        "nodata": "Calls",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 540,
+        "y": 280,
+        "wires": [
+            []
+        ],
+        "inputLabels": [
+            "Calls"
+        ]
+    },
+    {
+        "id": "980e96e3c7d91bbb",
+        "type": "link in",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "Sys. Calls",
+        "links": [
+            "dc9fd2e4ff7ff2d7"
+        ],
+        "x": 120,
+        "y": 200,
+        "wires": [
+            [
+                "02873d08e3557ed1"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "f1da1fc229689158",
+        "type": "link out",
+        "z": "9e055a34fe489dca",
+        "g": "473a871ba87fbdfb",
+        "name": "AllCalls",
+        "mode": "link",
+        "links": [
+            "de58cc9ff7d1df42"
+        ],
+        "x": 300,
+        "y": 60,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "02873d08e3557ed1",
+        "type": "function",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "Max",
+        "func": "function roundToTwo(num) {\n    return +(Math.round(num + \"e+2\") + \"e-2\");\n}\n\nvar data = context.get(\"data\");\nif (data === undefined) {\n    data = {};\n    context.set(\"data\", data);\n}\n\nvar dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nvar intervals = [\"2s\", \"15s\", \"1min\"];\n\nif (msg.topic != \"sendit\") {\n    for (let period in intervals) {\n        var rate = intervals[period]\n\n        if (data[rate] === undefined) {\n            data[rate] = {};\n        }\n\n        var number = roundToTwo(msg.payload);\n\n        if (data[rate][msg.topic] === undefined) {\n            data[rate][msg.topic] = {\n                // \"count\": 0,\n                // \"total\": 0,\n                // \"avg\": 0,\n                // \"min\": number,\n                \"max\": number,\n            };\n        }\n\n        //data[rate][msg.topic].total = roundToTwo(data[rate][msg.topic].total + number);\n        //data[rate][msg.topic].count += 1;\n\n        //data[rate][msg.topic].avg = roundToTwo(data[rate][msg.topic].total / data[rate][msg.topic].count);\n        if (number > data[rate][msg.topic].max) { data[rate][msg.topic].max = number; }\n        //if (number < data[rate][msg.topic].min) { data[rate][msg.topic].min = number; }\n    }\n    node.status({ fill: \"green\", shape: dots, text: \"calculating...\" });\n} else {\n    var msg_out = [];\n\n    //var outputs = [\"max\"];\n\n    for (let interval in intervals) {\n        var period = intervals[interval];\n        if (msg.payload == period) {\n            for (let system in data[period]) {\n                var newmsg = {};\n                var index = \"max\";\n                newmsg.topic = system;\n                newmsg.target = period;\n                newmsg.payload = data[period][system][index];\n                //msg_out.push(newmsg);\n                node.send(newmsg);\n            }\n            node.status({ fill: \"yellow\", shape: dots, text: \"sent \" + period });\n            data[period] = {};\n        }\n    }\n    //node.send(msg_out);\n    //data = {}\n\n}\n\n\ncontext.set(\"data\", data);\nreturn; //msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"yellow\", shape: \"dot\", text: \"waiting\" });",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 200,
+        "wires": [
+            [
+                "708242a7c469610c"
+            ]
+        ]
+    },
+    {
+        "id": "1b6bc51e2e6f0edf",
+        "type": "inject",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "1min",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "*/1 0-23 * * *",
+        "once": false,
+        "onceDelay": "60",
+        "topic": "sendit",
+        "payload": "1min",
+        "payloadType": "str",
+        "x": 130,
+        "y": 320,
+        "wires": [
+            [
+                "02873d08e3557ed1"
+            ]
+        ]
+    },
+    {
+        "id": "a0f163f8abd3e147",
+        "type": "inject",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "15sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "15",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "60",
+        "topic": "sendit",
+        "payload": "15s",
+        "payloadType": "str",
+        "x": 130,
+        "y": 280,
+        "wires": [
+            [
+                "02873d08e3557ed1"
+            ]
+        ]
+    },
+    {
+        "id": "d584ff241745b444",
+        "type": "inject",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "2sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "60",
+        "topic": "sendit",
+        "payload": "2s",
+        "payloadType": "str",
+        "x": 130,
+        "y": 240,
+        "wires": [
+            [
+                "02873d08e3557ed1"
+            ]
+        ]
+    },
+    {
+        "id": "708242a7c469610c",
+        "type": "switch",
+        "z": "9e055a34fe489dca",
+        "g": "33daade83f7dfc86",
+        "name": "",
+        "property": "target",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "2s",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "15s",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "1min",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 330,
+        "y": 280,
+        "wires": [
+            [
+                "cb56707051a9cf85"
+            ],
+            [
+                "b40471e7163d4186"
+            ],
+            [
+                "dd8b3b996b62d762"
+            ]
+        ]
+    },
+    {
+        "id": "529cfce6d53a2c46",
+        "type": "ui_text",
+        "z": "9e055a34fe489dca",
+        "g": "70f3387673fc2fec",
+        "group": "76f0c0df11c2ed51",
+        "order": 5,
+        "width": 3,
+        "height": 1,
+        "name": "Max",
+        "label": "Max:",
+        "format": "{{msg.payload | number:0}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 570,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "7cf511fd541361e3",
+        "type": "ui_text",
+        "z": "9e055a34fe489dca",
+        "g": "70f3387673fc2fec",
+        "group": "76f0c0df11c2ed51",
+        "order": 3,
+        "width": 3,
+        "height": 1,
+        "name": "Min",
+        "label": "Min:",
+        "format": "{{msg.payload | number:0}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 570,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "6769e3c36a0bb664",
+        "type": "ui_text",
+        "z": "9e055a34fe489dca",
+        "g": "70f3387673fc2fec",
+        "group": "76f0c0df11c2ed51",
+        "order": 4,
+        "width": 3,
+        "height": 1,
+        "name": "Avg",
+        "label": "5m Avg:  ",
+        "format": "{{msg.payload | number:1}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 570,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "fc43ffab96b31188",
+        "type": "link in",
+        "z": "9e055a34fe489dca",
+        "g": "70f3387673fc2fec",
+        "name": "Total Calls",
+        "links": [
+            "9a74e64faff3ba70"
+        ],
+        "x": 120,
+        "y": 420,
+        "wires": [
+            [
+                "2df186c56c12735c",
+                "021e07256c5f844b"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "2df186c56c12735c",
+        "type": "ui_gauge",
+        "z": "9e055a34fe489dca",
+        "g": "70f3387673fc2fec",
+        "name": "",
+        "group": "76f0c0df11c2ed51",
+        "order": 1,
+        "width": 9,
+        "height": 6,
+        "gtype": "gage",
+        "title": "Current Call Rate",
+        "label": "Calls/Min",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "20",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 530,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "379b743af27c5f06",
+        "type": "inject",
+        "z": "9e055a34fe489dca",
+        "g": "70f3387673fc2fec",
+        "name": "5min",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "*/5 0-23 * * *",
+        "once": false,
+        "onceDelay": "60",
+        "topic": "sendit",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 500,
+        "wires": [
+            [
+                "021e07256c5f844b"
+            ]
+        ]
+    },
+    {
+        "id": "021e07256c5f844b",
+        "type": "function",
+        "z": "9e055a34fe489dca",
+        "g": "70f3387673fc2fec",
+        "name": "Avg/Min/Max",
+        "func": "function roundToTwo(num) {\n    return +(Math.round(num + \"e+2\") + \"e-2\");\n}\n\n\nvar data = context.get(\"data\");\nif (data === undefined) {\n    data = {};\n    context.set(\"data\", data);\n}\n\nvar dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\n\nif (msg.topic != \"sendit\") {\n    var number = roundToTwo(msg.payload);\n\n    if (data[msg.topic] === undefined) {\n        data[msg.topic] = {\n            \"count\": 0,\n            \"total\": 0,\n            \"avg\": 0,\n            \"min\": number,\n            \"max\": number,\n        };\n    }\n\n    data[msg.topic].total = roundToTwo(data[msg.topic].total + number);\n    data[msg.topic].count += 1;\n\n    data[msg.topic].avg = roundToTwo(data[msg.topic].total / data[msg.topic].count);\n    if (number > data[msg.topic].max) { data[msg.topic].max = number; }\n    if (number < data[msg.topic].min) { data[msg.topic].min = number; }\n\n    node.status({ fill: \"green\", shape: dots, text: data[msg.topic].count + \" - calls: \" + number });\n} else {\n    var msg_out = [];\n\n    var outputs = [\"avg\", \"min\", \"max\"];\n\n    for (let system in data) {\n        for (var key in outputs) {\n\n            var newmsg = {};\n            var index = outputs[key];\n            newmsg.topic = index;\n            newmsg.payload = data[system][outputs[key]];\n            msg_out.push(newmsg);\n            //node.send(newmsg);\n\n        }\n    }\n    node.send(msg_out);\n    data = {}\n    node.status({ fill: \"yellow\", shape: dots, text: \"sent\" });\n}\n\n\ncontext.set(\"data\", data);\nreturn; //msg;",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"yellow\", shape: \"dot\", text: \"waiting\" });",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 500,
+        "wires": [
+            [
+                "6769e3c36a0bb664"
+            ],
+            [
+                "7cf511fd541361e3"
+            ],
+            [
+                "529cfce6d53a2c46"
+            ]
+        ]
+    },
+    {
+        "id": "8243e4d81a8120e2",
+        "type": "ui_spacer",
+        "z": "9e055a34fe489dca",
+        "name": "spacer",
+        "group": "76f0c0df11c2ed51",
+        "order": 6,
+        "width": 9,
+        "height": 1
+    },
+    {
+        "id": "61de5090.0f5d9",
+        "type": "mqtt-broker",
+        "name": "Local MQTT Server",
+        "broker": "192.168.1.20",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "true",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "76f0c0df11c2ed51",
+        "type": "ui_group",
+        "name": "Trunk-Recorder Call Rate",
+        "tab": "605bb00421eed7da",
+        "order": 1,
+        "disp": true,
+        "width": "24",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "605bb00421eed7da",
+        "type": "ui_tab",
+        "name": "Call Rate",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]
