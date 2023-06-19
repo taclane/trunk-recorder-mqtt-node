@@ -1,6 +1,6 @@
 [
     {
-        "id": "36de031ff6913756",
+        "id": "6ae37af9c8689bca",
         "type": "tab",
         "label": "Recorders & Calls",
         "disabled": false,
@@ -10,7 +10,7 @@
     {
         "id": "3ee187ca1e7c77fa",
         "type": "group",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "name": "Active Calls & Recorders",
         "style": {
             "label": true
@@ -24,28 +24,29 @@
             "3201b07f5d35d45a",
             "81efc56a59696d52",
             "6a1a1a843081a284",
-            "d80dc9e3867ca58b",
-            "f7e487d148bf483e"
+            "f7e487d148bf483e",
+            "652bfa7b3aee55d4",
+            "0e652cf69b2587cc"
         ],
-        "x": 54,
+        "x": 34,
         "y": 19,
-        "w": 592,
-        "h": 382
+        "w": 612,
+        "h": 322
     },
     {
         "id": "e077a1fd7774b673",
         "type": "function",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
         "name": "Calls",
-        "func": "var dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nvar state = {\n       0: \"MONITORING\",\n       1: \"RECORDING\",\n       2: \"INACTIVE\",\n       3: \"ACTIVE\",\n       4: \"IDLE\",\n       5: \"COMPLETED\",\n       6: \"STOPPED\",\n       7: \"AVAILABLE\"\n};\n\nvar monState = {\n       0: \"MONITORING\",\n       1: \"UNKNOWN_TG\",\n       2: \"IGNORED_TG\",\n       3: \"NO_SOURCE\",\n       4: \"NO_RECORDER\",\n       5: \"ENCRYPTED\",\n       6: \"DUPLICATE\",\n       7: \"SUPERSEDED\"\n};\n\nconst sortmsg = {\n       payload: {\n              command: \"setSort\",\n              arguments: [[{ column: \"callNum\", dir: \"asc\" }]],\n              returnPromise: false\n       }\n};\n\n\nvar callData = flow.get(\"callData\");\nif (callData === undefined) {\n       callData = {};\n       flow.set(\"callData\", callData);\n}\n\nif (msg.payload.type == \"calls_active\") {\n       for (var i = 0; i < msg.payload.calls.length; i++) {\n              msg.payload.calls[i].freq = (msg.payload.calls[i].freq / 1000000).toFixed(6)\n              msg.payload.calls[i].state = state[msg.payload.calls[i].state]\n              msg.payload.calls[i].recState = state[msg.payload.calls[i].recState]\n              msg.payload.calls[i].monState = monState[msg.payload.calls[i].monState]\n              \n              callData[msg.payload.calls[i].callNum] = msg.payload.calls[i]\n       }\n}\n\nif (msg.payload.type == \"call_start\") {\n\n       var cnum = msg.payload.call.callNum\n\n       callData[cnum] = msg.payload.call\n\n       callData[cnum].freq = (msg.payload.call.freq / 1000000).toFixed(6)\n       callData[cnum].state = state[msg.payload.call.state]\n       callData[cnum].recState = state[msg.payload.call.recState]\n       callData[cnum].monState = monState[msg.payload.call.monState]\n}\n\nvar pruneTime = +new Date()\npruneTime = Math.round(pruneTime / 1000)\nfor (let i in callData) {\n       node.status({ fill: \"red\", shape: dots, text: pruneTime + \" : \" + callData[i].stopTime });\n       if ((callData[i].conventional == \"false\") && (callData[i].stopTime < pruneTime - 20)) {\n              delete callData[i]\n       } else if ((callData[i].conventional == \"false\") && (callData[i].stopTime < pruneTime - 25)) {\n              callData[i].state = \"STOPPED\"\n              callData[i].recNum = \"X\"\n              callData[i].srcNum = \"X\"\n       }\n}\n\nmsg.payload = Object.values(callData) \nflow.set(\"callData\", callData);\n\nreturn ([[msg, sortmsg]]);",
+        "func": "var dots = context.get(\"dots\", \"memoryOnly\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots, \"memoryOnly\")\n\nconst sortmsg = {\n       payload: {\n              command: \"setSort\",\n              arguments: [[{ column: \"call_num\", dir: \"asc\" }]],\n              returnPromise: false\n       }\n};\n\nfunction boldIfTrue(text, compare) {\n       if (text == compare) {\n              return \"<span style='font-weight:bold; background-color:#cc0000;'>\" + text + \"</span>\";\n       };\n       return text;\n}\n\nvar callData = flow.get(\"callData\", \"memoryOnly\");\nif (callData === undefined) {\n       callData = {};\n       flow.set(\"callData\", callData, \"memoryOnly\");\n}\n\n// update calls using call_num as a unique ID\nif (msg.payload.type == \"calls_active\") {\n       for (var i = 0; i < msg.payload.calls.length; i++) {\n              var cnum = msg.payload.calls[i].call_num;\n              callData[cnum] = msg.payload.calls[i];\n              callData[cnum].freq = (msg.payload.calls[i].freq / 1000000).toFixed(6);\n              callData[cnum].update_time = Math.round(+new Date() / 1000);\n\n              // preserve only the newest encypted call on the same TG\n              if (callData[cnum].call_state_type == \"MONITORING\") {\n                     for (let i in callData) {\n                            if (callData[i].talkgroup == callData[cnum].talkgroup) {\n                                   if (i > cnum) {\n                                          callData[cnum].update_time = 0;\n                                   }\n                            }\n                     }\n              }\n       }\n} else if (msg.payload.type == \"call_start\") {\n       var cnum = msg.payload.call.call_num;\n       callData[cnum] = msg.payload.call;\n       callData[cnum].freq = (msg.payload.call.freq / 1000000).toFixed(6);\n       callData[cnum].update_time = Math.round(+new Date() / 1000);\n\n       // preserve only the newest encypted call on the same TG\n       if (callData[cnum].call_state_type == \"MONITORING\") {\n              for (let i in callData) {\n                     if (callData[i].talkgroup == callData[cnum].talkgroup) {\n                            if (i > cnum) {\n                                   callData[cnum].update_time = 0;\n                            }\n                     }\n              }\n       }\n\n} else if (msg.payload.type == \"call_end\") {\n       var cnum = msg.payload.call.call_num;\n       callData[cnum].call_state_type = \"COMPLETED\";\n       callData[cnum].rec_state_type = \"STOPPED\";\n       callData[cnum].mon_state_type = \"UNSPEC\";\n       callData[cnum].length = msg.payload.call.length;\n       callData[cnum].stop_time = msg.payload.call.stop_time;\n}\n\n// Prune calls 30 seconds after last update\nvar pruneTime = Math.round(+new Date() / 1000);\nvar num_calls = 0;\nfor (let i in callData) {\n       callData[i].call_state_type = boldIfTrue(callData[i].call_state_type, \"RECORDING\")\n       callData[i].encrypted = boldIfTrue(callData[i].encrypted, \"true\")\n\n       if (callData[i].call_state_type == \"COMPLETED\") {\n              callData[i].rec_num = \"\";\n              callData[i].src_num = \"\";\n       }\n\n       if (callData[i].update_time < pruneTime - 15) {\n              delete callData[i];\n       }\n\n       num_calls++;\n}\n\nnode.status({ fill: \"red\", shape: dots, text: msg.payload.type + \" \" + num_calls });\n\nmsg.payload = Object.values(callData);\nflow.set(\"callData\", callData, \"memoryOnly\");\n\nreturn ([[msg, sortmsg]]);",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 240,
+        "x": 350,
+        "y": 220,
         "wires": [
             [
                 "458e044b84a0bf61"
@@ -55,7 +56,7 @@
     {
         "id": "458e044b84a0bf61",
         "type": "ui_table",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
         "group": "fa2b9cb252fcf55f",
         "name": "Calls",
@@ -64,7 +65,7 @@
         "height": 7,
         "columns": [
             {
-                "field": "callNum",
+                "field": "call_num",
                 "title": "Call",
                 "width": "75",
                 "align": "right",
@@ -74,7 +75,7 @@
                 }
             },
             {
-                "field": "shortName",
+                "field": "sys_name",
                 "title": "System",
                 "width": "75",
                 "align": "right",
@@ -84,7 +85,7 @@
                 }
             },
             {
-                "field": "recNum",
+                "field": "rec_num",
                 "title": "R",
                 "width": "50",
                 "align": "right",
@@ -94,7 +95,7 @@
                 }
             },
             {
-                "field": "srcNum",
+                "field": "src_num",
                 "title": "S",
                 "width": "50",
                 "align": "left",
@@ -124,7 +125,7 @@
                 }
             },
             {
-                "field": "talkgrouptag",
+                "field": "talkgroup_alpha_tag",
                 "title": "TG Tag",
                 "width": "",
                 "align": "left",
@@ -134,7 +135,7 @@
                 }
             },
             {
-                "field": "srcId",
+                "field": "unit",
                 "title": "Source",
                 "width": "100",
                 "align": "right",
@@ -148,7 +149,7 @@
                 "title": "Encrypt",
                 "width": "100",
                 "align": "center",
-                "formatter": "plaintext",
+                "formatter": "html",
                 "formatterParams": {
                     "target": "_blank"
                 }
@@ -174,17 +175,17 @@
                 }
             },
             {
-                "field": "state",
+                "field": "call_state_type",
                 "title": "CallState",
                 "width": "",
                 "align": "left",
-                "formatter": "plaintext",
+                "formatter": "html",
                 "formatterParams": {
                     "target": "_blank"
                 }
             },
             {
-                "field": "recState",
+                "field": "rec_state_type",
                 "title": "RecS",
                 "width": "",
                 "align": "left",
@@ -194,7 +195,7 @@
                 }
             },
             {
-                "field": "monState",
+                "field": "mon_state_type",
                 "title": "Mon",
                 "width": "",
                 "align": "left",
@@ -227,24 +228,24 @@
         "outputs": 0,
         "cts": false,
         "x": 570,
-        "y": 240,
+        "y": 220,
         "wires": []
     },
     {
         "id": "816f2b8081383fd3",
         "type": "mqtt in",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
-        "name": "MQTT In",
+        "name": "Recorder (update)",
         "topic": "server/status/recorder",
-        "qos": "2",
+        "qos": "0",
         "datatype": "json",
         "broker": "61de5090.0f5d9",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 140,
+        "x": 150,
         "y": 60,
         "wires": [
             [
@@ -255,19 +256,19 @@
     {
         "id": "e58ad2d8d0ee1dc5",
         "type": "mqtt in",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
-        "name": "MQTT In",
+        "name": "Recorders (all)",
         "topic": "server/status/recorders",
-        "qos": "2",
+        "qos": "0",
         "datatype": "json",
         "broker": "61de5090.0f5d9",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 140,
-        "y": 120,
+        "x": 130,
+        "y": 100,
         "wires": [
             [
                 "97439d0fdd5a63d4"
@@ -277,17 +278,17 @@
     {
         "id": "97439d0fdd5a63d4",
         "type": "function",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
         "name": "Recorders",
-        "func": "function roundToTwo(num) {\n    return +(Math.round(num + \"e+2\") + \"e-2\");\n}\n\nvar dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nconst sortmsg = {\n    payload: {\n        command: \"setSort\",\n        arguments: [[{ column: \"id\", dir: \"asc\" }]],\n        returnPromise: false\n    }\n};\n\nconst state = {\n    0: \"MONITORING\",\n    1: \"RECORDING\",\n    2: \"INACTIVE\",\n    3: \"ACTIVE\",\n    4: \"IDLE\",\n    5: \"COMPLETED\",\n    6: \"STOPPED\",\n    7: \"AVAILABLE\"\n};\n\nvar recData = flow.get(\"recData\");\nif (recData === undefined) {\n    recData = {};\n    flow.set(\"recData\", recData);\n}\n\n//var newmsg = {}\n\nif (msg.payload.type == \"recorders\") {\n    for (var i = 0; i < msg.payload.recorders.length; i++) {\n        msg.payload.recorders[i].state = state[msg.payload.recorders[i].state]\n        msg.payload.recorders[i].duration = roundToTwo(msg.payload.recorders[i].duration)\n        recData[msg.payload.recorders[i].id] = msg.payload.recorders[i]\n    }\n}\n\nif (msg.payload.type == \"recorder\") {\n    msg.payload.recorder.state = state[msg.payload.recorder.state]\n    msg.payload.recorder.duration = roundToTwo(msg.payload.recorder.duration)\n    recData[msg.payload.recorder.id] = msg.payload.recorder\n}\n\nvar newmsg = { payload: Object.values(recData) };\nnode.send([[newmsg, sortmsg]]);\nnode.status({ fill: \"red\", shape: dots, text: newmsg.payload.length });\nflow.set(\"recData\", recData);\nreturn;",
+        "func": "var dots = context.get(\"dots\", \"memoryOnly\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots, \"memoryOnly\")\n\nfunction boldIfTrue(text, compare){\n    if (text == compare) {\n        return \"<span style='font-weight:bold; background-color:#cc0000;'>\"+text+\"</span>\";\n    };\n    return text;\n}\n\n\nconst sortmsg = {\n    payload: {\n        command: \"setSort\",\n        arguments: [[{ column: \"id\", dir: \"asc\" }]],\n        returnPromise: false\n    }\n};\n\nvar recData = flow.get(\"recData\", \"memoryOnly\");\nif (recData === undefined) {\n    recData = {};\n    flow.set(\"recData\", recData, \"memoryOnly\");\n}\n\nif (msg.payload.type == \"recorders\") {\n    for (var i = 0; i < msg.payload.recorders.length; i++) {\n        var id = msg.payload.recorders[i].id\n        recData[id] = msg.payload.recorders[i]\n        recData[id].freq = (recData[id].freq / 1000000).toFixed(6)\n    }\n\n//<span style='backgroundcolor:#3FB449; font-weight:bold;'>asdasas</span>..\n\n} else if (msg.payload.type == \"recorder\") {\n    if (recData.len > 0) {\n        var id = msg.payload.recorder.id\n        recData[id] = msg.payload.recorder\n        recData[id].freq = (recData[id].freq / 1000000).toFixed(6)\n    }\n}\n\nfor (let i in recData) {\n    recData[i].squelched = boldIfTrue(recData[i].squelched, \"false\")\n    recData[i].rec_state_type = boldIfTrue(recData[i].rec_state_type, \"RECORDING\")\n    if (recData[i].rec_state_type == \"AVAILABLE\") {\n        recData[i].freq = \"\";\n    }\n}\n\nvar newmsg = { payload: Object.values(recData) };\nnode.send([[newmsg]]) //, sortmsg]]);\nnode.status({ fill: \"red\", shape: dots, text: msg.payload.type + \" \" + newmsg.payload.length });\nflow.set(\"recData\", recData, \"memoryOnly\");\nreturn;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 390,
-        "y": 120,
+        "x": 370,
+        "y": 100,
         "wires": [
             [
                 "3201b07f5d35d45a"
@@ -297,7 +298,7 @@
     {
         "id": "3201b07f5d35d45a",
         "type": "ui_table",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
         "group": "fa2b9cb252fcf55f",
         "name": "Recorders",
@@ -326,7 +327,7 @@
                 }
             },
             {
-                "field": "srcNum",
+                "field": "src_num",
                 "title": "Source",
                 "width": "",
                 "align": "left",
@@ -336,11 +337,21 @@
                 }
             },
             {
-                "field": "recNum",
+                "field": "rec_num",
                 "title": "Recorder",
                 "width": "",
                 "align": "left",
                 "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "freq",
+                "title": "Freq",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
                 "formatterParams": {
                     "target": "_blank"
                 }
@@ -366,11 +377,21 @@
                 }
             },
             {
-                "field": "state",
+                "field": "rec_state_type",
                 "title": "RecState",
                 "width": "",
                 "align": "left",
-                "formatter": "plaintext",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "squelched",
+                "title": "Squelched",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
                 "formatterParams": {
                     "target": "_blank"
                 }
@@ -379,25 +400,25 @@
         "outputs": 0,
         "cts": false,
         "x": 550,
-        "y": 120,
+        "y": 100,
         "wires": []
     },
     {
         "id": "81efc56a59696d52",
         "type": "mqtt in",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
-        "name": "MQTT In",
+        "name": "Call (start)",
         "topic": "server/status/call_start",
-        "qos": "2",
+        "qos": "0",
         "datatype": "json",
         "broker": "61de5090.0f5d9",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 140,
-        "y": 300,
+        "x": 120,
+        "y": 180,
         "wires": [
             [
                 "e077a1fd7774b673"
@@ -407,41 +428,19 @@
     {
         "id": "6a1a1a843081a284",
         "type": "mqtt in",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
-        "name": "MQTT In",
+        "name": "Call (end)",
         "topic": "server/status/call_end",
-        "qos": "2",
+        "qos": "0",
         "datatype": "json",
         "broker": "61de5090.0f5d9",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 140,
-        "y": 360,
-        "wires": [
-            [
-                "e077a1fd7774b673"
-            ]
-        ]
-    },
-    {
-        "id": "d80dc9e3867ca58b",
-        "type": "mqtt in",
-        "z": "36de031ff6913756",
-        "g": "3ee187ca1e7c77fa",
-        "name": "MQTT In",
-        "topic": "server/status/calls_active",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "61de5090.0f5d9",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 140,
-        "y": 240,
+        "x": 120,
+        "y": 220,
         "wires": [
             [
                 "e077a1fd7774b673"
@@ -451,18 +450,59 @@
     {
         "id": "f7e487d148bf483e",
         "type": "ui_ui_control",
-        "z": "36de031ff6913756",
+        "z": "6ae37af9c8689bca",
         "g": "3ee187ca1e7c77fa",
-        "name": "",
+        "name": "Refresh",
         "events": "all",
-        "x": 140,
-        "y": 180,
+        "x": 120,
+        "y": 140,
         "wires": [
             [
                 "e077a1fd7774b673",
                 "97439d0fdd5a63d4"
             ]
         ]
+    },
+    {
+        "id": "0e652cf69b2587cc",
+        "type": "mqtt in",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Calls (active)",
+        "topic": "server/status/calls_active",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": "0",
+        "inputs": 0,
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ]
+    },
+    {
+        "id": "652bfa7b3aee55d4",
+        "type": "link in",
+        "z": "6ae37af9c8689bca",
+        "d": true,
+        "g": "3ee187ca1e7c77fa",
+        "name": "Calls (active)",
+        "links": [
+            "f1da1fc229689158"
+        ],
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ],
+        "l": true
     },
     {
         "id": "fa2b9cb252fcf55f",
