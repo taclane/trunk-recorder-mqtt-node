@@ -2,7 +2,7 @@
     {
         "id": "9e055a34fe489dca",
         "type": "tab",
-        "label": "Calls",
+        "label": "Call Rates",
         "disabled": false,
         "info": "",
         "env": []
@@ -22,13 +22,14 @@
             "55bf4e98669a42c3",
             "9a74e64faff3ba70",
             "dc9fd2e4ff7ff2d7",
+            "f1da1fc229689158",
             "0d7997594d8439a3",
-            "f1da1fc229689158"
+            "85e06cd04d95e77b"
         ],
         "x": 34,
         "y": 19,
         "w": 612,
-        "h": 122
+        "h": 142
     },
     {
         "id": "33daade83f7dfc86",
@@ -43,16 +44,13 @@
             "b40471e7163d4186",
             "dd8b3b996b62d762",
             "980e96e3c7d91bbb",
-            "d584ff241745b444",
-            "a0f163f8abd3e147",
-            "1b6bc51e2e6f0edf",
             "02873d08e3557ed1",
             "708242a7c469610c"
         ],
         "x": 34,
-        "y": 159,
+        "y": 179,
         "w": 612,
-        "h": 202
+        "h": 169.5
     },
     {
         "id": "70f3387673fc2fec",
@@ -68,34 +66,33 @@
             "6769e3c36a0bb664",
             "fc43ffab96b31188",
             "2df186c56c12735c",
-            "379b743af27c5f06",
             "021e07256c5f844b"
         ],
         "x": 34,
-        "y": 379,
+        "y": 359,
         "w": 612,
-        "h": 202
+        "h": 162
     },
     {
         "id": "55bf4e98669a42c3",
         "type": "mqtt in",
         "z": "9e055a34fe489dca",
         "g": "473a871ba87fbdfb",
-        "name": "MQTT In",
+        "name": "Calls In",
         "topic": "server/status/calls_active",
-        "qos": "2",
+        "qos": "0",
         "datatype": "json",
         "broker": "61de5090.0f5d9",
         "nl": false,
         "rap": true,
-        "rh": 0,
+        "rh": "0",
         "inputs": 0,
-        "x": 120,
+        "x": 110,
         "y": 60,
         "wires": [
             [
-                "0d7997594d8439a3",
-                "f1da1fc229689158"
+                "f1da1fc229689158",
+                "0d7997594d8439a3"
             ]
         ]
     },
@@ -129,32 +126,9 @@
             "980e96e3c7d91bbb"
         ],
         "x": 550,
-        "y": 100,
+        "y": 120,
         "wires": [],
         "l": true
-    },
-    {
-        "id": "0d7997594d8439a3",
-        "type": "function",
-        "z": "9e055a34fe489dca",
-        "g": "473a871ba87fbdfb",
-        "name": "Count Calls",
-        "func": "// Record system number/shortname mapping\nvar systems = global.get(\"systems\");\nif (systems === undefined) {\n    systems = {};\n    global.set(\"systems\", systems);\n}\n\n// Count calls by shortname\nvar call3 = {};\nfor (var i = 0; i < msg.payload.calls.length; i++) {\n    var name = msg.payload.calls[i].shortName\n    var sys = msg.payload.calls[i].sysNum\n\n    if (!call3[name]) {\n        call3[name] = 0;\n    }\n    call3[name] = call3[name] + 1;\n\n    systems[sys] = name;\n}\n\n// Generate payload by shortname\nvar msgBySys = []\nvar callStatus = \"\"\n\nfor (let k in call3) {\n    var system = k\n    var callcount = Number(call3[k])\n    var status = system + \":\" + callcount\n    callStatus = (callStatus == \"\") ? status : callStatus + \", \" + status;\n    msgBySys.push({ payload: callcount, topic: system });\n}\n\n// Generate payload for all calls\nvar len = Object.keys(msg.payload.calls).length;\nvar msgAll = {}\nmsgAll.payload = len\nmsgAll.topic = \"all\"\n\nvar dots = context.get(\"dots\");\ndots = (dots==undefined)||(dots==\"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nnode.status({ fill: \"green\", shape: dots, text: callStatus });\nnode.send([msgAll, msgBySys]);\nreturn [, msgAll];",
-        "outputs": 2,
-        "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({fill:\"yellow\",shape:\"dot\",text:\"waiting\"});",
-        "finalize": "",
-        "libs": [],
-        "x": 310,
-        "y": 100,
-        "wires": [
-            [
-                "9a74e64faff3ba70"
-            ],
-            [
-                "dc9fd2e4ff7ff2d7"
-            ]
-        ]
     },
     {
         "id": "cb56707051a9cf85",
@@ -169,7 +143,7 @@
         "label": "Calls Per Minute",
         "chartType": "line",
         "legend": "true",
-        "xformat": "HH:mm",
+        "xformat": "auto",
         "interpolate": "step",
         "nodata": "Calls",
         "dot": false,
@@ -196,7 +170,7 @@
         "useDifferentColor": false,
         "className": "",
         "x": 540,
-        "y": 200,
+        "y": 220,
         "wires": [
             []
         ],
@@ -217,7 +191,7 @@
         "label": "Calls Per Hour",
         "chartType": "line",
         "legend": "true",
-        "xformat": "HH:mm",
+        "xformat": "auto",
         "interpolate": "step",
         "nodata": "Calls",
         "dot": false,
@@ -244,7 +218,7 @@
         "useDifferentColor": false,
         "className": "",
         "x": 540,
-        "y": 240,
+        "y": 260,
         "wires": [
             []
         ],
@@ -265,7 +239,7 @@
         "label": "Calls Per Day",
         "chartType": "line",
         "legend": "true",
-        "xformat": "HH:mm",
+        "xformat": "auto",
         "interpolate": "step",
         "nodata": "Calls",
         "dot": false,
@@ -292,7 +266,7 @@
         "useDifferentColor": false,
         "className": "",
         "x": 540,
-        "y": 280,
+        "y": 300,
         "wires": [
             []
         ],
@@ -310,7 +284,7 @@
             "dc9fd2e4ff7ff2d7"
         ],
         "x": 120,
-        "y": 200,
+        "y": 220,
         "wires": [
             [
                 "02873d08e3557ed1"
@@ -323,12 +297,12 @@
         "type": "link out",
         "z": "9e055a34fe489dca",
         "g": "473a871ba87fbdfb",
-        "name": "AllCalls",
+        "name": "Calls (active)",
         "mode": "link",
         "links": [
-            "de58cc9ff7d1df42"
+            "652bfa7b3aee55d4"
         ],
-        "x": 300,
+        "x": 310,
         "y": 60,
         "wires": [],
         "l": true
@@ -339,107 +313,17 @@
         "z": "9e055a34fe489dca",
         "g": "33daade83f7dfc86",
         "name": "Max",
-        "func": "function roundToTwo(num) {\n    return +(Math.round(num + \"e+2\") + \"e-2\");\n}\n\nvar data = context.get(\"data\");\nif (data === undefined) {\n    data = {};\n    context.set(\"data\", data);\n}\n\nvar dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nvar intervals = [\"2s\", \"15s\", \"1min\"];\n\nif (msg.topic != \"sendit\") {\n    for (let period in intervals) {\n        var rate = intervals[period]\n\n        if (data[rate] === undefined) {\n            data[rate] = {};\n        }\n\n        var number = roundToTwo(msg.payload);\n\n        if (data[rate][msg.topic] === undefined) {\n            data[rate][msg.topic] = {\n                // \"count\": 0,\n                // \"total\": 0,\n                // \"avg\": 0,\n                // \"min\": number,\n                \"max\": number,\n            };\n        }\n\n        //data[rate][msg.topic].total = roundToTwo(data[rate][msg.topic].total + number);\n        //data[rate][msg.topic].count += 1;\n\n        //data[rate][msg.topic].avg = roundToTwo(data[rate][msg.topic].total / data[rate][msg.topic].count);\n        if (number > data[rate][msg.topic].max) { data[rate][msg.topic].max = number; }\n        //if (number < data[rate][msg.topic].min) { data[rate][msg.topic].min = number; }\n    }\n    node.status({ fill: \"green\", shape: dots, text: \"calculating...\" });\n} else {\n    var msg_out = [];\n\n    //var outputs = [\"max\"];\n\n    for (let interval in intervals) {\n        var period = intervals[interval];\n        if (msg.payload == period) {\n            for (let system in data[period]) {\n                var newmsg = {};\n                var index = \"max\";\n                newmsg.topic = system;\n                newmsg.target = period;\n                newmsg.payload = data[period][system][index];\n                //msg_out.push(newmsg);\n                node.send(newmsg);\n            }\n            node.status({ fill: \"yellow\", shape: dots, text: \"sent \" + period });\n            data[period] = {};\n        }\n    }\n    //node.send(msg_out);\n    //data = {}\n\n}\n\n\ncontext.set(\"data\", data);\nreturn; //msg;",
+        "func": "function roundToTwo(num) {\n    return +(Math.round(num + \"e+2\") + \"e-2\");\n}\n\nvar data = context.get(\"data\", \"memoryOnly\");\nif (data === undefined) {\n    data = {};\n    context.set(\"data\", data, \"memoryOnly\");\n}\n\nvar next2sAvg = context.get(\"next2sAvg\", \"memoryOnly\");\nif (next2sAvg === undefined) {\n    next2sAvg = Number(msg.timestamp) + 2\n    context.set(\"next2sAvg\", next2sAvg, \"memoryOnly\");\n}\n\nvar next15sAvg = context.get(\"next15sAvg\", \"memoryOnly\");\nif (next15sAvg === undefined) {\n    next15sAvg = Number(msg.timestamp) + 15\n    context.set(\"next15sAvg\", next15sAvg, \"memoryOnly\");\n}\n\nvar next1mAvg = context.get(\"next1mAvg\", \"memoryOnly\");\nif (next1mAvg === undefined) {\n    next1mAvg = Number(msg.timestamp) + 300\n    context.set(\"next1mAvg\", next1mAvg, \"memoryOnly\");\n}\n\nvar dots = context.get(\"dots\", \"memoryOnly\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots, \"memoryOnly\")\n\nvar intervals = [\"2s\", \"15s\", \"1min\"];\n\n//if (msg.topic != \"sendit\") {\n    for (let period in intervals) {\n        var rate = intervals[period]\n\n        if (data[rate] === undefined) {\n            data[rate] = {};\n        }\n\n        var number = roundToTwo(msg.payload);\n\n        if (data[rate][msg.topic] === undefined) {\n            data[rate][msg.topic] = {\n                \"max\": number,\n            };\n        }\n\n        if (number > data[rate][msg.topic].max) { data[rate][msg.topic].max = number; }\n    }\n    node.status({ fill: \"green\", shape: dots, text: \"calculating...\" });\n//} else {\n\n    //var msg_out = [];\n\n    //for (let interval in intervals) {\n    //    var period = intervals[interval];\n        // if (msg.payload == period) {\n        //     for (let system in data[period]) {\n        //         var newmsg = {};\n        //         var index = \"max\";\n        //         newmsg.topic = system;\n        //         newmsg.target = period;\n        //         newmsg.payload = data[period][system][index];\n        //         node.send(newmsg);\n        //     }\n        //     node.status({ fill: \"yellow\", shape: dots, text: \"sent \" + period });\n        //     data[period] = {};\n        //}\n    //}\n//}\n\nvar newmsg = {};\n\nif (msg.timestamp >= next2sAvg){\n    var period = \"2s\";\n    for (let system in data[period]) {\n        newmsg = {\n            topic: system,\n            target: period,\n            payload: data[period][system][\"max\"]\n        };\n        node.send(newmsg);\n    }\n    node.status({ fill: \"yellow\", shape: dots, text: \"sent \" + period });\n    data[period] = {};\n\n    next2sAvg = Number(msg.timestamp) + 2\n    context.set(\"next2sAvg\", next2sAvg, \"memoryOnly\");\n}\n\nif (msg.timestamp >= next15sAvg) {\n    var period = \"15s\";\n    for (let system in data[period]) {\n        newmsg = {\n            topic: system,\n            target: period,\n            payload: data[period][system][\"max\"]\n        };\n        node.send(newmsg);\n    }\n    node.status({ fill: \"yellow\", shape: dots, text: \"sent \" + period });\n    data[period] = {};\n\n    next15sAvg = Number(msg.timestamp) + 15\n    context.set(\"next15sAvg\", next15sAvg, \"memoryOnly\");\n}\n\nif (msg.timestamp >= next1mAvg) {\n    var period = \"1min\";\n    for (let system in data[period]) {\n        newmsg = {\n            topic: system,\n            target: period,\n            payload: data[period][system][\"max\"]\n        };\n        node.send(newmsg);\n    }\n    node.status({ fill: \"yellow\", shape: dots, text: \"sent \" + period });\n    data[period] = {};\n\n    next1mAvg = Number(msg.timestamp) + 60\n    context.set(\"next1mAvg\", next1mAvg, \"memoryOnly\");\n}\n\ncontext.set(\"data\", data, \"memoryOnly\");\nreturn; ",
         "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"yellow\", shape: \"dot\", text: \"waiting\" });",
         "finalize": "",
         "libs": [],
         "x": 290,
-        "y": 200,
+        "y": 220,
         "wires": [
             [
                 "708242a7c469610c"
-            ]
-        ]
-    },
-    {
-        "id": "1b6bc51e2e6f0edf",
-        "type": "inject",
-        "z": "9e055a34fe489dca",
-        "g": "33daade83f7dfc86",
-        "name": "1min",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "*/1 0-23 * * *",
-        "once": false,
-        "onceDelay": "60",
-        "topic": "sendit",
-        "payload": "1min",
-        "payloadType": "str",
-        "x": 130,
-        "y": 320,
-        "wires": [
-            [
-                "02873d08e3557ed1"
-            ]
-        ]
-    },
-    {
-        "id": "a0f163f8abd3e147",
-        "type": "inject",
-        "z": "9e055a34fe489dca",
-        "g": "33daade83f7dfc86",
-        "name": "15sec",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "15",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "60",
-        "topic": "sendit",
-        "payload": "15s",
-        "payloadType": "str",
-        "x": 130,
-        "y": 280,
-        "wires": [
-            [
-                "02873d08e3557ed1"
-            ]
-        ]
-    },
-    {
-        "id": "d584ff241745b444",
-        "type": "inject",
-        "z": "9e055a34fe489dca",
-        "g": "33daade83f7dfc86",
-        "name": "2sec",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "2",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "60",
-        "topic": "sendit",
-        "payload": "2s",
-        "payloadType": "str",
-        "x": 130,
-        "y": 240,
-        "wires": [
-            [
-                "02873d08e3557ed1"
             ]
         ]
     },
@@ -468,11 +352,11 @@
                 "vt": "str"
             }
         ],
-        "checkall": "true",
+        "checkall": "false",
         "repair": false,
         "outputs": 3,
-        "x": 330,
-        "y": 280,
+        "x": 290,
+        "y": 300,
         "wires": [
             [
                 "cb56707051a9cf85"
@@ -496,11 +380,15 @@
         "height": 1,
         "name": "Max",
         "label": "Max:",
-        "format": "{{msg.payload | number:0}}",
+        "format": "{{msg.payload.max | number:0}}",
         "layout": "col-center",
         "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
         "x": 570,
-        "y": 540,
+        "y": 480,
         "wires": []
     },
     {
@@ -514,11 +402,15 @@
         "height": 1,
         "name": "Min",
         "label": "Min:",
-        "format": "{{msg.payload | number:0}}",
+        "format": "{{msg.payload.min | number:0}}",
         "layout": "col-center",
         "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
         "x": 570,
-        "y": 500,
+        "y": 440,
         "wires": []
     },
     {
@@ -532,11 +424,15 @@
         "height": 1,
         "name": "Avg",
         "label": "5m Avg:  ",
-        "format": "{{msg.payload | number:1}}",
+        "format": "{{msg.payload.avg | number:1}}",
         "layout": "col-center",
         "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
         "x": 570,
-        "y": 460,
+        "y": 400,
         "wires": []
     },
     {
@@ -549,7 +445,7 @@
             "9a74e64faff3ba70"
         ],
         "x": 120,
-        "y": 420,
+        "y": 400,
         "wires": [
             [
                 "2df186c56c12735c",
@@ -582,39 +478,9 @@
         "seg1": "",
         "seg2": "",
         "className": "",
-        "x": 530,
-        "y": 420,
+        "x": 330,
+        "y": 400,
         "wires": []
-    },
-    {
-        "id": "379b743af27c5f06",
-        "type": "inject",
-        "z": "9e055a34fe489dca",
-        "g": "70f3387673fc2fec",
-        "name": "5min",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "*/5 0-23 * * *",
-        "once": false,
-        "onceDelay": "60",
-        "topic": "sendit",
-        "payload": "",
-        "payloadType": "date",
-        "x": 130,
-        "y": 500,
-        "wires": [
-            [
-                "021e07256c5f844b"
-            ]
-        ]
     },
     {
         "id": "021e07256c5f844b",
@@ -622,23 +488,64 @@
         "z": "9e055a34fe489dca",
         "g": "70f3387673fc2fec",
         "name": "Avg/Min/Max",
-        "func": "function roundToTwo(num) {\n    return +(Math.round(num + \"e+2\") + \"e-2\");\n}\n\n\nvar data = context.get(\"data\");\nif (data === undefined) {\n    data = {};\n    context.set(\"data\", data);\n}\n\nvar dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\n\nif (msg.topic != \"sendit\") {\n    var number = roundToTwo(msg.payload);\n\n    if (data[msg.topic] === undefined) {\n        data[msg.topic] = {\n            \"count\": 0,\n            \"total\": 0,\n            \"avg\": 0,\n            \"min\": number,\n            \"max\": number,\n        };\n    }\n\n    data[msg.topic].total = roundToTwo(data[msg.topic].total + number);\n    data[msg.topic].count += 1;\n\n    data[msg.topic].avg = roundToTwo(data[msg.topic].total / data[msg.topic].count);\n    if (number > data[msg.topic].max) { data[msg.topic].max = number; }\n    if (number < data[msg.topic].min) { data[msg.topic].min = number; }\n\n    node.status({ fill: \"green\", shape: dots, text: data[msg.topic].count + \" - calls: \" + number });\n} else {\n    var msg_out = [];\n\n    var outputs = [\"avg\", \"min\", \"max\"];\n\n    for (let system in data) {\n        for (var key in outputs) {\n\n            var newmsg = {};\n            var index = outputs[key];\n            newmsg.topic = index;\n            newmsg.payload = data[system][outputs[key]];\n            msg_out.push(newmsg);\n            //node.send(newmsg);\n\n        }\n    }\n    node.send(msg_out);\n    data = {}\n    node.status({ fill: \"yellow\", shape: dots, text: \"sent\" });\n}\n\n\ncontext.set(\"data\", data);\nreturn; //msg;",
-        "outputs": 3,
+        "func": "function roundToTwo(num) {\n    return +(Math.round(num + \"e+2\") + \"e-2\");\n}\n\nvar callData = context.get(\"callData\", \"memoryOnly\");\nif (callData === undefined) {\n    callData = {};\n    context.set(\"callData\", callData, \"memoryOnly\");\n}\n\nvar dots = context.get(\"dots\", \"memoryOnly\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots, \"memoryOnly\")\n\nvar next5mAvg = context.get(\"next5mAvg\", \"memoryOnly\");\nif (next5mAvg === undefined) {\n    next5mAvg = Number(msg.timestamp) + 300\n    context.set(\"next5mAvg\", next5mAvg, \"memoryOnly\");\n}\n\nvar number = roundToTwo(msg.payload);\n\nif (callData[msg.topic] === undefined) {\n    callData[msg.topic] = {\n        \"count\": 0,\n        \"total\": 0,\n        \"avg\": 0,\n        \"min\": number,\n        \"max\": number,\n    };\n}\n\ncallData[msg.topic].total = roundToTwo(callData[msg.topic].total + number);\ncallData[msg.topic].count += 1;\n\ncallData[msg.topic].avg = roundToTwo(callData[msg.topic].total / callData[msg.topic].count);\nif (number > callData[msg.topic].max) { callData[msg.topic].max = number; }\nif (number < callData[msg.topic].min) { callData[msg.topic].min = number; }\n\nvar nodeStatus = callData[msg.topic].count + \" - calls: \" + number;\nnode.status({ fill: \"green\", shape: dots, text: nodeStatus });\n\nif (Number(msg.timestamp) >= Number(next5mAvg)) {\n\n    var msg_out = {}\n    msg_out.payload = {}\n\n    var outputs = [\"avg\", \"min\", \"max\"];\n\n    for (let system in callData) {\n        for (var key in outputs) {\n            msg_out.payload[outputs[key]] = callData[system][outputs[key]];\n        }\n    }\n\n    node.send(msg_out);\n\n    next5mAvg = Number(msg.timestamp) + 300\n    context.set(\"next5mAvg\", next5mAvg, \"memoryOnly\");\n\n    callData = {}\n    node.status({ fill: \"yellow\", shape: dots, text: \"sent \" + nodeStatus });\n}\n\ncontext.set(\"callData\", callData, \"memoryOnly\");\nreturn;",
+        "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"yellow\", shape: \"dot\", text: \"waiting\" });",
         "finalize": "",
         "libs": [],
         "x": 310,
-        "y": 500,
+        "y": 440,
         "wires": [
             [
-                "6769e3c36a0bb664"
-            ],
-            [
-                "7cf511fd541361e3"
-            ],
-            [
+                "6769e3c36a0bb664",
+                "7cf511fd541361e3",
                 "529cfce6d53a2c46"
+            ]
+        ]
+    },
+    {
+        "id": "0d7997594d8439a3",
+        "type": "function",
+        "z": "9e055a34fe489dca",
+        "g": "473a871ba87fbdfb",
+        "name": "Count Calls",
+        "func": "// Record system number/shortname mapping\nvar systems = global.get(\"systems\");\nif (systems === undefined) {\n    systems = {};\n    global.set(\"systems\", systems);\n}\n\nif (msg.payload.type == \"systems\") {\n    for (var i = 0; i < msg.payload.systems.length; i++) {\n        var sys_name = msg.payload.systems[i].sys_name\n        var sys_num = msg.payload.systems[i].sys_num\n\n        systems[sys_num] = sys_name;\n        global.set(\"systems\", systems);\n    }\n    return;\n\n} else {\n    // Initialize count with known shortnames\n    var activeCalls = {};\n    var knownSystems = Object.values(systems);\n\n    for (let k in knownSystems) {\n        activeCalls[knownSystems[k]] = 0;\n    }\n\n    // Count calls by shortname\n    var sys_name;\n    var sys_num;\n    var callTotal = 0;\n\n    for (var i = 0; i < msg.payload.calls.length; i++) {\n        sys_name = msg.payload.calls[i].sys_name\n        sys_num = msg.payload.calls[i].sys_num\n\n        if (!activeCalls[sys_name]) {\n            activeCalls[sys_name] = 0;\n        }\n\n        // Ignore unstarted calls\n        // if (call_length > 0) {\n        activeCalls[sys_name] = activeCalls[sys_name] + 1;\n        callTotal = callTotal + 1;\n        // }\n\n        systems[sys_num] = sys_name;\n        global.set(\"systems\", systems);\n    }\n\n    // Generate payload by shortname\n    var msgBySys = []\n    var nodeStatus = \"\"\n\n    for (let sysName in activeCalls) {\n        var sysCalls = Number(activeCalls[sysName])\n        var sysStatus = sysName + \":\" + sysCalls\n        nodeStatus = (nodeStatus == \"\") ? sysStatus : nodeStatus + \", \" + sysStatus;\n        msgBySys.push({\n            payload: sysCalls,\n            topic: sysName,\n            timestamp: msg.payload.timestamp\n        });\n    }\n\n    // Generate payload for total calls\n    var msgAll = {\n        payload: callTotal,\n        topic: \"all\",\n        timestamp: msg.payload.timestamp\n    };\n    msgBySys.push(msgAll);\n\n    var dots = context.get(\"dots\");\n    dots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\n    context.set(\"dots\", dots)\n\n    node.status({ fill: \"green\", shape: dots, text: nodeStatus });\n    return [msgAll, msgBySys];\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({fill:\"yellow\",shape:\"dot\",text:\"waiting\"});",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "9a74e64faff3ba70"
+            ],
+            [
+                "dc9fd2e4ff7ff2d7"
+            ]
+        ]
+    },
+    {
+        "id": "85e06cd04d95e77b",
+        "type": "mqtt in",
+        "z": "9e055a34fe489dca",
+        "g": "473a871ba87fbdfb",
+        "name": "Systems In",
+        "topic": "server/status/systems",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 120,
+        "wires": [
+            [
+                "0d7997594d8439a3"
             ]
         ]
     },

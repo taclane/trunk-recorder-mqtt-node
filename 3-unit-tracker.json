@@ -1,428 +1,72 @@
 [
     {
-        "id": "fe4cdc23598f5919",
+        "id": "6ae37af9c8689bca",
         "type": "tab",
-        "label": "Units",
+        "label": "Recorders & Calls",
         "disabled": false,
         "info": "",
         "env": []
     },
     {
-        "id": "10a1ea34ccfc73d3",
+        "id": "3ee187ca1e7c77fa",
         "type": "group",
-        "z": "fe4cdc23598f5919",
-        "name": "MQTT In / Parse Unit Messages",
+        "z": "6ae37af9c8689bca",
+        "name": "Active Calls & Recorders",
         "style": {
-            "label": true,
-            "fill": "#ffC000",
-            "fill-opacity": "0.35",
-            "color": "#000000"
+            "label": true
         },
         "nodes": [
-            "e702c084dd22e630",
-            "b19e562ac3f39084",
-            "0e06822884a34d8c",
-            "a5230b9cf932e35a"
+            "e077a1fd7774b673",
+            "458e044b84a0bf61",
+            "816f2b8081383fd3",
+            "e58ad2d8d0ee1dc5",
+            "97439d0fdd5a63d4",
+            "3201b07f5d35d45a",
+            "81efc56a59696d52",
+            "6a1a1a843081a284",
+            "f7e487d148bf483e",
+            "652bfa7b3aee55d4",
+            "0e652cf69b2587cc"
         ],
         "x": 34,
         "y": 19,
         "w": 612,
-        "h": 122
+        "h": 322
     },
     {
-        "id": "1c30f71e43797168",
-        "type": "group",
-        "z": "fe4cdc23598f5919",
-        "name": "Status",
-        "style": {
-            "label": true
-        },
-        "nodes": [
-            "062d2e3068c1adf7",
-            "10e47c49ac066085",
-            "7ed25314a42b3d8c",
-            "d480e890761b4715",
-            "4d7015cf39d2fc71",
-            "5a0c5fd40ee1a692",
-            "63bc7f0a03b30385",
-            "858a6bc2.0384e8"
-        ],
-        "x": 34,
-        "y": 339,
-        "w": 612,
-        "h": 162
-    },
-    {
-        "id": "d0e068509f28aa32",
-        "type": "group",
-        "z": "fe4cdc23598f5919",
-        "name": "Table",
-        "style": {
-            "label": true
-        },
-        "nodes": [
-            "b075d2ac.a69f3",
-            "76c4495f.da70f8",
-            "7b1c27f4.36a718",
-            "512ee8b7b726a1c7",
-            "e61ed52927c4ae59",
-            "d8f63e620c1bc105",
-            "cfbae38e47b6635d"
-        ],
-        "x": 34,
-        "y": 159,
-        "w": 612,
-        "h": 162
-    },
-    {
-        "id": "bdb9ad793d325dd9",
-        "type": "group",
-        "z": "fe4cdc23598f5919",
-        "name": "Debug Junk",
-        "style": {
-            "label": true
-        },
-        "nodes": [
-            "19e88f0.0c32071",
-            "d7bf29ea1fc8c608",
-            "7cd3992db435b79d",
-            "0c7186fb384d634c",
-            "82d1a6e4ab259639",
-            "39142c43dc8035bd",
-            "03ce9d58e018fd4d"
-        ],
-        "x": 34,
-        "y": 519,
-        "w": 612,
-        "h": 162
-    },
-    {
-        "id": "19e88f0.0c32071",
-        "type": "debug",
-        "z": "fe4cdc23598f5919",
-        "g": "bdb9ad793d325dd9",
-        "name": "debug",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 530,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "e702c084dd22e630",
-        "type": "mqtt in",
-        "z": "fe4cdc23598f5919",
-        "g": "10a1ea34ccfc73d3",
-        "name": "MQTT In",
-        "topic": "server/units/clmrn/#",
-        "qos": "2",
-        "datatype": "json",
-        "broker": "61de5090.0f5d9",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 120,
-        "y": 60,
-        "wires": [
-            [
-                "0e06822884a34d8c",
-                "a5230b9cf932e35a"
-            ]
-        ]
-    },
-    {
-        "id": "b19e562ac3f39084",
-        "type": "link out",
-        "z": "fe4cdc23598f5919",
-        "g": "10a1ea34ccfc73d3",
-        "name": "To Unit Table",
-        "mode": "link",
-        "links": [
-            "512ee8b7b726a1c7"
-        ],
-        "x": 550,
-        "y": 100,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "d7bf29ea1fc8c608",
-        "type": "link out",
-        "z": "fe4cdc23598f5919",
-        "g": "bdb9ad793d325dd9",
-        "name": "To Unit Table",
-        "mode": "link",
-        "links": [
-            "512ee8b7b726a1c7"
-        ],
-        "x": 550,
-        "y": 600,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "7cd3992db435b79d",
-        "type": "link out",
-        "z": "fe4cdc23598f5919",
-        "g": "bdb9ad793d325dd9",
-        "name": "To Table Mgr.",
-        "mode": "link",
-        "links": [
-            "d8f63e620c1bc105"
-        ],
-        "x": 550,
-        "y": 640,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "0e06822884a34d8c",
-        "type": "debug",
-        "z": "fe4cdc23598f5919",
-        "g": "10a1ea34ccfc73d3",
-        "name": "MQTT debug",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 310,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "a5230b9cf932e35a",
+        "id": "e077a1fd7774b673",
         "type": "function",
-        "z": "fe4cdc23598f5919",
-        "g": "10a1ea34ccfc73d3",
-        "name": "Parse Input",
-        "func": "var dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\n// Status\nnode.status({ fill: \"yellow\", shape: dots, text: \"waiting\" });\n\n// Talkgroup Data Table\nvar tgData = flow.get(\"tgData\");\nif (tgData === undefined) {\n    tgData = {};\n    flow.set(\"tgData\", tgData);\n}\n// Unit Data Table\nvar unitsData = flow.get(\"unitData\");\nif (unitsData === undefined) {\n    unitsData = {};\n    flow.set(\"unitData\", unitsData);\n}\n\n// Display Table \nvar tData = flow.get(\"tData\");\nif (tData === undefined) {\n    tData = {};\n    flow.set(\"tData\", tData);\n}\n\n// Control channel messages\nconst msg_types = [\n    \"end\", \"xans_req\", \"location\", \"join\",\n    \"call\", \"on\", \"off\", \"data\", \"ackresp\"];\n\n// Control messages with talkgroup info\nconst msg_tg_types = [\n    \"end\", \"ans_req\", \"location\", \"join\", \"call\"];\n\nconst unknowns = {\n    \"-1\": \"UNKNOWN\",\n    \"0\": \"NONE\",\n    \"12582912\": \"Test\"\n}\n\n// Get Type\nvar type = msg.payload.type;\n\n// Parse only enabled messages\nif (msg_types.includes(type)) {\n    var system = msg.payload[type].system;\n    var unit = msg.payload[type].unit;\n    var unitalpha = msg.payload[type].unit_alpha;\n\n    if (unit in unknowns) {\n        unitalpha = unknowns[unit];\n    }\n\n    var args = {};\n    // Unit ID\n    args[\"id\"] = unit;\n    // Unit Alpha\n    args[\"alpha\"] = unitalpha\n    // Message Type\n    args[\"text\"] = type + \"\";\n    // ISO Timestampe (hidden) and local time\n    args[\"timestamp\"] = (new Date()).toISOString();\n    args[\"local\"] = new Date(args[\"timestamp\"]).toLocaleString(\"en-US\", { timeZoneName: \"short\" });\n    // On/Encrypted/Off\n    args[\"status\"] = 100;\n\n\n    // Initialize unit rceords\n    var unitdata = unitsData[unit];\n    if (unitdata === undefined) {\n        unitdata = {};\n    }\n    if (unitalpha != \"\") {\n        unitdata.alpha = unitalpha;\n    }\n    if (unitdata.subs === undefined) {\n        unitdata.subs = [];\n    }\n\n    // Parse messages with TG info\n    if (msg_tg_types.includes(type)) {\n        var tgnum = msg.payload[type].talkgroup;\n        var tgalpha = msg.payload[type].talkgroup_alpha\n\n        if (tgnum in unknowns) {\n            tgalpha = unknowns[tgnum];\n        }\n        args[\"talkgroup\"] = tgnum + \" [\" + tgalpha + \"]\";\n\n        // Initialize talkgroup records\n        var talkdata = tgData[tgnum];\n        if (talkdata === undefined) {\n            talkdata = {};\n        }\n        if (tgalpha != \"\") {\n            talkdata.alpha = tgalpha;\n        }\n\n        if (talkdata.subs === undefined) {\n            talkdata.subs = [];\n        }\n\n        // Add unit to talkgroup records\n        if (!talkdata.subs.includes(unit)) {\n            talkdata.subs.push(unit);\n            tgData[tgnum] = talkdata;\n        }\n\n        // Add talkgroups to unit records\n        if (!unitdata.subs.includes(tgnum)) {\n            unitdata.subs.push(tgnum);\n            unitsData[unit] = unitdata;\n        }\n    }\n\n    //  Check for special cases\n    switch (type) {\n        case \"off\":\n            // Display unit as red on table\n            args[\"status\"] = 0;\n            break;\n        case \"call\":\n            // Add encryption notes, display yellow if encrypted\n            if (msg.payload[type].encrypted == \"true\") {\n                talkdata.encrypted = true;\n                unitdata.encrypted = true;\n                args[\"talkgroup\"] = args[\"talkgroup\"] + \" [E]\";\n                args[\"status\"] = 50;\n            } else {\n                talkdata.encrypted = false;\n                unitdata.encrypted = false;\n            }\n            unitsData[unit] = unitdata;\n            tgData[tgnum] = talkdata;\n    }\n\n    node.status({ fill: \"green\", shape: dots, text: system + \" \" + type + \" \" + unit });\n\n    // Save datatables\n    tData[unit] = args;\n    flow.set(\"unitData\", unitsData);\n    flow.set(\"tgData\", tgData);\n    flow.set(\"tData\", tData);\n\n    // Send to table \n    msg.payload = {\n        command: \"updateOrAddData\",\n        arguments: [[args]],\n        returnPromise: true\n    }\n    return msg;\n}",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Calls",
+        "func": "var dots = context.get(\"dots\", \"memoryOnly\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots, \"memoryOnly\")\n\nconst sortmsg = {\n       payload: {\n              command: \"setSort\",\n              arguments: [[{ column: \"call_num\", dir: \"asc\" }]],\n              returnPromise: false\n       }\n};\n\nfunction boldIfTrue(text, compare) {\n       if (text == compare) {\n              return \"<span style='font-weight:bold;'>\" + text + \"</span>\";\n       };\n       return text;\n}\n\nvar callData = flow.get(\"callData\", \"memoryOnly\");\nif (callData === undefined) {\n       callData = {};\n       flow.set(\"callData\", callData, \"memoryOnly\");\n}\n\n// update calls using call_num as a unique ID\nif (msg.payload.type == \"calls_active\") {\n       for (var i = 0; i < msg.payload.calls.length; i++) {\n              var cnum = msg.payload.calls[i].call_num;\n              callData[cnum] = msg.payload.calls[i];\n              callData[cnum].freq = (msg.payload.calls[i].freq / 1000000).toFixed(6);\n              callData[cnum].update_time = Math.round(+new Date() / 1000);\n\n              // preserve only the newest encypted call on the same TG\n              if (callData[cnum].call_state_type == \"MONITORING\") {\n                     for (let i in callData) {\n                            if (callData[i].talkgroup == callData[cnum].talkgroup) {\n                                   if (i > cnum) {\n                                          callData[cnum].update_time = 0;\n                                   }\n                            }\n                     }\n              }\n       }\n} else if (msg.payload.type == \"call_start\") {\n       var cnum = msg.payload.call.call_num;\n       callData[cnum] = msg.payload.call;\n       callData[cnum].freq = (msg.payload.call.freq / 1000000).toFixed(6);\n       callData[cnum].update_time = Math.round(+new Date() / 1000);\n\n       // preserve only the newest encypted call on the same TG\n       if (callData[cnum].call_state_type == \"MONITORING\") {\n              for (let i in callData) {\n                     if (callData[i].talkgroup == callData[cnum].talkgroup) {\n                            if (i > cnum) {\n                                   callData[cnum].update_time = 0;\n                            }\n                     }\n              }\n       }\n\n} else if (msg.payload.type == \"call_end\") {\n       var cnum = msg.payload.call.call_num;\n       callData[cnum].call_state_type = \"COMPLETED\";\n       callData[cnum].rec_state_type = \"STOPPED\";\n       callData[cnum].mon_state_type = \"UNSPEC\";\n       callData[cnum].length = msg.payload.call.length;\n       callData[cnum].stop_time = msg.payload.call.stop_time;\n}\n\n// Prune calls 30 seconds after last update\nvar pruneTime = Math.round(+new Date() / 1000);\nvar num_calls = 0;\nfor (let i in callData) {\n       callData[i].call_state_type = boldIfTrue(callData[i].call_state_type, \"RECORDING\")\n       callData[i].encrypted = boldIfTrue(callData[i].encrypted, \"true\")\n\n       if (callData[i].call_state_type == \"COMPLETED\") {\n              callData[i].rec_num = \"\";\n              callData[i].src_num = \"\";\n       }\n\n       if (callData[i].update_time < pruneTime - 15) {\n              delete callData[i];\n       }\n\n       num_calls++;\n}\n\nnode.status({ fill: \"red\", shape: dots, text: msg.payload.type + \" \" + num_calls });\n\nmsg.payload = Object.values(callData);\nflow.set(\"callData\", callData, \"memoryOnly\");\n\nreturn ([[msg, sortmsg]]);",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"yellow\", shape: \"ring\", text: \"waiting\" });",
+        "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 310,
-        "y": 100,
+        "x": 350,
+        "y": 220,
         "wires": [
             [
-                "b19e562ac3f39084"
-            ]
-        ],
-        "info": "# updateOrAddData([row])\n\nadds a the row with a new id (same as addRow)"
-    },
-    {
-        "id": "062d2e3068c1adf7",
-        "type": "ui_text",
-        "z": "fe4cdc23598f5919",
-        "g": "1c30f71e43797168",
-        "group": "c91332c0.50c11",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "name": "Table Label",
-        "label": "{{caption.label}}",
-        "format": "{{caption.text}}",
-        "layout": "col-center",
-        "className": "",
-        "x": 330,
-        "y": 420,
-        "wires": [],
-        "info": "{{msg.payload.caption}}"
-    },
-    {
-        "id": "10e47c49ac066085",
-        "type": "link in",
-        "z": "fe4cdc23598f5919",
-        "g": "1c30f71e43797168",
-        "name": "Status",
-        "links": [
-            "4d7015cf39d2fc71",
-            "cfbae38e47b6635d"
-        ],
-        "x": 75,
-        "y": 420,
-        "wires": [
-            [
-                "d480e890761b4715",
-                "858a6bc2.0384e8"
+                "458e044b84a0bf61"
             ]
         ]
     },
     {
-        "id": "7ed25314a42b3d8c",
+        "id": "458e044b84a0bf61",
         "type": "ui_table",
-        "z": "fe4cdc23598f5919",
-        "g": "1c30f71e43797168",
-        "group": "c91332c0.50c11",
-        "name": "Side Table",
-        "order": 4,
-        "width": 7,
-        "height": 13,
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "group": "fa2b9cb252fcf55f",
+        "name": "Calls",
+        "order": 2,
+        "width": 24,
+        "height": 7,
         "columns": [
             {
-                "field": "id",
-                "title": "ID",
-                "width": "100",
-                "align": "left",
-                "formatter": "plaintext",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            },
-            {
-                "field": "alpha",
-                "title": "Alpha",
-                "width": "",
-                "align": "left",
-                "formatter": "plaintext",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            }
-        ],
-        "outputs": 1,
-        "cts": true,
-        "x": 330,
-        "y": 460,
-        "wires": [
-            [
-                "4d7015cf39d2fc71"
-            ]
-        ]
-    },
-    {
-        "id": "d480e890761b4715",
-        "type": "function",
-        "z": "fe4cdc23598f5919",
-        "g": "1c30f71e43797168",
-        "name": "Lookup",
-        "func": "\nconst topics = [\"alpha\", \"id\"];\n\nif (topics.includes(msg.topic)) {\n    var type = msg.payload.type;\n    var id = msg.payload.id\n\n    var out_type = \"\";\n    var out_title = \"\";\n\n    msg.caption = {};\n\n    // Pick Alpha Lookup Tables\n    // Display TGs associated with a UID\n    if (type == \"unit\") {\n        var data = flow.get(\"unitData\")[id];\n        var alpha = data.alpha ?? \"-\";\n\n        msg.caption.label = \"Unit\"\n        msg.caption.text = id + \" : \" + alpha;\n\n        var dataTable = flow.get(\"tgData\");\n        out_type = \"talkgroup\";\n        out_title = \"TG\";\n    }\n\n    // Display Units associated with a TG\n    else if (type == \"talkgroup\") {\n        var data = flow.get(\"tgData\")[id];\n        var alpha = data.alpha ?? \"-\";\n        var encrypt = data.encrypted ?? \"false\"\n\n        if (encrypt == true) { alpha = alpha + \" [E]\"; }\n\n        msg.caption.label = \"Talkgroup\"\n        msg.caption.text = id + \" : \" + alpha;\n\n        var dataTable = flow.get(\"unitData\");\n        out_type = \"unit\";\n        out_title = \"UID\";\n    }\n    node.status({ fill: \"green\", shape: \"ring\", text: type + \": \" + id });\n\n    // Get IDs\n    var subs = (data[\"subs\"]).sort((a, b) => a - b)\n\n    // Parse Messages\n    var tableout = []\n    for (let index = 0; index < subs.length; index++) {\n        var sub = {}\n        var id = subs[index];\n        var alphas = \"\";\n\n        if (id in dataTable) {\n            if (\"alpha\" in dataTable[id]) {\n                alphas = dataTable[id].alpha;\n            }\n        }\n        sub[\"id\"] = id;\n        sub[\"alpha\"] = alphas;\n        sub[\"type\"] = out_type;\n        tableout.push(sub)\n    }\n\n    //Send\n    msg.ui_control = { \"tabulator\": { \"columns\": [{ \"field\": \"id\", \"title\": out_title }] } };\n    msg.payload = tableout;\n    return msg;\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"yellow\", shape: \"ring\", text: \"waiting\" });",
-        "finalize": "",
-        "libs": [],
-        "x": 160,
-        "y": 460,
-        "wires": [
-            [
-                "7ed25314a42b3d8c",
-                "062d2e3068c1adf7"
-            ]
-        ],
-        "info": "# updateOrAddData([row])\n\nadds a the row with a new id (same as addRow)"
-    },
-    {
-        "id": "4d7015cf39d2fc71",
-        "type": "link out",
-        "z": "fe4cdc23598f5919",
-        "g": "1c30f71e43797168",
-        "name": "To Status >",
-        "mode": "link",
-        "links": [
-            "10e47c49ac066085"
-        ],
-        "x": 550,
-        "y": 460,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "63bc7f0a03b30385",
-        "type": "ui_switch",
-        "z": "fe4cdc23598f5919",
-        "g": "1c30f71e43797168",
-        "name": "",
-        "label": "Auto-Update",
-        "tooltip": "",
-        "group": "c91332c0.50c11",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "decouple": "false",
-        "topic": "sorted",
-        "topicType": "msg",
-        "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
-        "onicon": "",
-        "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
-        "officon": "",
-        "offcolor": "",
-        "animate": false,
-        "className": "",
-        "x": 330,
-        "y": 380,
-        "wires": [
-            [
-                "5a0c5fd40ee1a692"
-            ]
-        ]
-    },
-    {
-        "id": "5a0c5fd40ee1a692",
-        "type": "change",
-        "z": "fe4cdc23598f5919",
-        "g": "1c30f71e43797168",
-        "name": "Toggle Sort",
-        "rules": [
-            {
-                "t": "set",
-                "p": "sorted",
-                "pt": "flow",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 550,
-        "y": 380,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b075d2ac.a69f3",
-        "type": "ui_table",
-        "z": "fe4cdc23598f5919",
-        "g": "d0e068509f28aa32",
-        "group": "237da972.5d69a6",
-        "name": "Unit Table",
-        "order": 1,
-        "width": 17,
-        "height": 16,
-        "columns": [
-            {
-                "field": "status",
-                "title": "",
-                "width": "40",
-                "align": "center",
-                "formatter": "traffic",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            },
-            {
-                "field": "id",
-                "title": "Unit",
+                "field": "call_num",
+                "title": "Call",
                 "width": "75",
                 "align": "right",
                 "formatter": "plaintext",
@@ -431,9 +75,29 @@
                 }
             },
             {
-                "field": "alpha",
-                "title": "AlphaText",
-                "width": "175",
+                "field": "sys_name",
+                "title": "System",
+                "width": "75",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "rec_num",
+                "title": "R",
+                "width": "50",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "src_num",
+                "title": "S",
+                "width": "50",
                 "align": "left",
                 "formatter": "plaintext",
                 "formatterParams": {
@@ -441,28 +105,8 @@
                 }
             },
             {
-                "field": "timestamp",
-                "title": "Timestamp",
-                "width": "0",
-                "align": "left",
-                "formatter": "plaintext",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            },
-            {
-                "field": "local",
-                "title": "Local Time",
-                "width": "",
-                "align": "center",
-                "formatter": "plaintext",
-                "formatterParams": {
-                    "target": "_blank"
-                }
-            },
-            {
-                "field": "text",
-                "title": "Last TX",
+                "field": "freq",
+                "title": "Freq",
                 "width": "100",
                 "align": "right",
                 "formatter": "plaintext",
@@ -472,7 +116,107 @@
             },
             {
                 "field": "talkgroup",
-                "title": "Last Talkgroup",
+                "title": "TG",
+                "width": "75",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "talkgroup_alpha_tag",
+                "title": "TG Tag",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "unit",
+                "title": "Source",
+                "width": "100",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "encrypted",
+                "title": "Encrypt",
+                "width": "100",
+                "align": "center",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "phase2",
+                "title": "P2",
+                "width": "100",
+                "align": "center",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "analog",
+                "title": "Analog",
+                "width": "100",
+                "align": "center",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "call_state_type",
+                "title": "CallState",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "rec_state_type",
+                "title": "RecS",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "mon_state_type",
+                "title": "Mon",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "elapsed",
+                "title": "Elap",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "length",
+                "title": "len",
                 "width": "",
                 "align": "left",
                 "formatter": "plaintext",
@@ -481,251 +225,295 @@
                 }
             }
         ],
-        "outputs": 1,
-        "cts": true,
-        "x": 160,
-        "y": 200,
-        "wires": [
-            [
-                "76c4495f.da70f8"
-            ]
-        ]
-    },
-    {
-        "id": "76c4495f.da70f8",
-        "type": "function",
-        "z": "fe4cdc23598f5919",
-        "g": "d0e068509f28aa32",
-        "name": "Table Manager",
-        "func": "var dots = context.get(\"dots\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots)\n\nvar status = { fill: \"yellow\", shape: dots, text: \"idle\" };\nvar success = (msg.topic && msg.topic === \"success\") || false;\n\n// initialize flow table\nvar tData = flow.get(\"tData\");\nif (tData === undefined) {\n    tData = [];\n    flow.set(\"tData\", tData);\n}\n\n// auto-sort message\nconst sortmsg = {\n    payload: {\n        command: \"setSort\",\n        arguments: [[{ column: \"timestamp\", dir: \"desc\" }]],\n        returnPromise: false\n    }\n};\n\n// label output message\nvar tLength = Object.keys(tData).length;\nvar caption = {\n    topic: \"caption\",\n    label: tLength + \" Units Recorded\",\n    text: \"-\"\n};\n\nswitch (typeof msg.payload) {\n    case \"string\":\n        switch (msg.payload) {\n            // refresh table on reload, hide timestamp column\n            case \"change\":\n                status = { fill: \"green\", shape: dots, text: \"table restored \" + tLength + \" rows\" };\n                caption.text = \"Table Restored\";\n                msg.payload = Object.values(tData)\n                msg.ui_control = { \"tabulator\": { \"columns\": [{ \"field\": \"timestamp\", \"visible\": false }] } };\n                break;\n        }\n        break;\n    case \"object\":\n        switch (msg.payload.command) {\n            case \"clearData\":\n                // clearData does not return a promise!\n                // clear the table data\n                status = { fill: \"green\", shape: dots, text: \"clearData: done\" };\n                tData = {};\n                flow.set(\"tData\", tData)\n                break;\n        }\n        // Handle lookup requests\n        var out_msg = { topic: \"id\", payload: {} };\n\n        // Lookup by unit/alpha\n        if ([\"id\", \"alpha\"].includes(msg.topic)) {\n            var unit = msg.payload.id;\n            out_msg.payload = { type: \"unit\", id: unit };\n            node.send([, out_msg]);\n        }\n        // lookup by talkgroup\n        else if ((msg.topic == \"talkgroup\") && (msg.payload.talkgroup != undefined)) {\n            var tg = (msg.payload.talkgroup).split(\" \", 1);\n            out_msg.payload = { type: \"talkgroup\", id: tg };\n            node.send([, out_msg]);\n        }\n        break;\n    default:\n        // likely a msg fom a ui-table command or callback\n        if (msg.hasOwnProperty(\"topic\") &&\n            msg.hasOwnProperty(\"ui_control\") &&\n            msg.ui_control.hasOwnProperty(\"callback\") &&\n            msg.hasOwnProperty(\"return\")) {\n            // message originates from a ui-table callback\n            if (success) {\n                switch (msg.return.command) {\n                    case \"updateOrAddData\":\n                        var stattext = msg.return.arguments[0][0].text + \" \" + msg.return.arguments[0][0].id;\n                        status.text = tLength + \" | \" + stattext;\n                        caption.text = stattext;\n                        break;\n                    default:\n                        status = { fill: \"yellow\", shape: dots, text: msg.return.command + \" unknown!\" };\n                        break;\n                }\n            } else {\n                status.text = msg.topic + \" \" + msg.error;\n            }\n        }\n        break;\n}\n\nif (success) status.fill = \"green\";\nnode.status(status);\nnode.send([msg, caption]);\n\n// send a sort command\nif (flow.get(\"sorted\") == true) {\n    return sortmsg;\n} else {\n    return;\n}",
-        "outputs": 2,
-        "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"yellow\", shape: \"ring\", text: \"idle\" });",
-        "finalize": "",
-        "libs": [],
-        "x": 340,
-        "y": 240,
-        "wires": [
-            [
-                "e61ed52927c4ae59"
-            ],
-            [
-                "cfbae38e47b6635d"
-            ]
-        ],
-        "icon": "font-awesome/fa-database",
-        "info": "# simple ui-table handler\n## abstract\nUsing ui-table with commands offer the hole flexibilty of tabulator. The table can be manipulated down to cell level.\nAs the ui-table node only passes the commands to tabulator and receives promises back the node does not hold the table data. If the data should be available after refresh, tab change, new connections the flow is responsible to cache the data and all the manipulations.\nThis node takes care of most simple data manipulation commands and holds a copy of the data in `flow.context.tabledata`\n\n## details\n\n### row index (id)\n\nTo identify a [row a index](http://tabulator.info/docs/4.5/data#overview) column has to be defined. This colum defaults to `id` but can be changed by specifing a **field** by using `msg.ui_control`. In this example the row index is a simple counter adding up by one if a new line is added.\n\n### addRow command\n\n[details @ tabulator addRow docs](http://tabulator.info/docs/4.5/update#alter-add)\n\nYou can add a row by sending the `addRow` command. You can decide if the row adds on the top or at the bottom of table.\n\n### addOrUpdate command\n\n[details @ tabulator addOrUpdate docs](http://tabulator.info/docs/4.5/update#alter-update)\n\nTo update data the best way is to use the `addOrUpdate` command. If the row indetified by the index is not exeisting a new row will be added automatically\n\n### deleteRow command\n\n[details @ tabulator deleteRow docs](http://tabulator.info/docs/4.5/update#row)\n\nDelete one or more rows (passing an array always results in \"row not found error\"! I think there is an issue in tabulator)\n\n### clearData\n\n[details @ tabulator clearData docs](http://tabulator.info/docs/4.5/update#alter-empty)\n\nunfortunately this command (currently) do not send a promise back! So we have to pass it directly to the table handler"
-    },
-    {
-        "id": "7b1c27f4.36a718",
-        "type": "ui_ui_control",
-        "z": "fe4cdc23598f5919",
-        "g": "d0e068509f28aa32",
-        "name": "Reload",
-        "events": "all",
-        "x": 160,
-        "y": 280,
-        "wires": [
-            [
-                "76c4495f.da70f8"
-            ]
-        ]
-    },
-    {
-        "id": "512ee8b7b726a1c7",
-        "type": "link in",
-        "z": "fe4cdc23598f5919",
-        "g": "d0e068509f28aa32",
-        "name": "Unit Table",
-        "links": [
-            "160b986853d7b1de",
-            "b19e562ac3f39084",
-            "d7bf29ea1fc8c608",
-            "e61ed52927c4ae59",
-            "576cd9c73083091c",
-            "f65a418ec2dafa2d"
-        ],
-        "x": 75,
-        "y": 200,
-        "wires": [
-            [
-                "b075d2ac.a69f3"
-            ]
-        ]
-    },
-    {
-        "id": "e61ed52927c4ae59",
-        "type": "link out",
-        "z": "fe4cdc23598f5919",
-        "g": "d0e068509f28aa32",
-        "name": "To Unit Table",
-        "mode": "link",
-        "links": [
-            "512ee8b7b726a1c7"
-        ],
-        "x": 550,
+        "outputs": 0,
+        "cts": false,
+        "x": 570,
         "y": 220,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "d8f63e620c1bc105",
-        "type": "link in",
-        "z": "fe4cdc23598f5919",
-        "g": "d0e068509f28aa32",
-        "name": "Table Recorder",
-        "links": [
-            "7cd3992db435b79d",
-            "0cc79676ef20a8c9",
-            "e88813fff4aa4da3",
-            "5befbae4eb85d022",
-            "64505aaa48883368"
-        ],
-        "x": 75,
-        "y": 240,
-        "wires": [
-            [
-                "76c4495f.da70f8"
-            ]
-        ]
-    },
-    {
-        "id": "cfbae38e47b6635d",
-        "type": "link out",
-        "z": "fe4cdc23598f5919",
-        "g": "d0e068509f28aa32",
-        "name": "To Status >",
-        "mode": "link",
-        "links": [
-            "10e47c49ac066085"
-        ],
-        "x": 550,
-        "y": 260,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "0c7186fb384d634c",
-        "type": "function",
-        "z": "fe4cdc23598f5919",
-        "g": "bdb9ad793d325dd9",
-        "name": "clear table",
-        "func": "\nmsg.payload={\n    command:\"clearData\",\n    arguments: [],\n    returnPromise: true\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 330,
-        "y": 600,
-        "wires": [
-            [
-                "7cd3992db435b79d",
-                "d7bf29ea1fc8c608"
-            ]
-        ],
-        "info": "# clear data\n\nunfortunately this command (currently) do not send a promise back! So we have to pass it directly to the table handler"
-    },
-    {
-        "id": "82d1a6e4ab259639",
-        "type": "inject",
-        "z": "fe4cdc23598f5919",
-        "d": true,
-        "g": "bdb9ad793d325dd9",
-        "name": "clear table",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 140,
-        "y": 600,
-        "wires": [
-            [
-                "0c7186fb384d634c"
-            ]
-        ]
-    },
-    {
-        "id": "39142c43dc8035bd",
-        "type": "inject",
-        "z": "fe4cdc23598f5919",
-        "d": true,
-        "g": "bdb9ad793d325dd9",
-        "name": "debug",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 130,
-        "y": 560,
-        "wires": [
-            [
-                "03ce9d58e018fd4d"
-            ]
-        ]
-    },
-    {
-        "id": "03ce9d58e018fd4d",
-        "type": "function",
-        "z": "fe4cdc23598f5919",
-        "g": "bdb9ad793d325dd9",
-        "name": "data fixer",
-        "func": "// Display Table \nvar tData = flow.get(\"tData\");\nif (tData === undefined) {\n    tData = {};\n    flow.set(\"tData\", tData);\n}\n\nfor (let unit in tData) {\n    msg.topic = tData[unit].timestamp;\n    msg.payload = new Date(tData[unit].timestamp).toLocaleString(\"en-US\", {timeZoneName: \"short\"});\n    node.send(msg);\n    tData[unit].local = new Date(tData[unit].timestamp).toLocaleString(\"en-US\", { timeZoneName: \"short\" });\n    \n}\n\n\n//flow.set(\"tData\", tData);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 320,
-        "y": 560,
-        "wires": [
-            [
-                "19e88f0.0c32071"
-            ]
-        ],
-        "info": "# clear data\n\nunfortunately this command (currently) do not send a promise back! So we have to pass it directly to the table handler"
-    },
-    {
-        "id": "858a6bc2.0384e8",
-        "type": "ui_text",
-        "z": "fe4cdc23598f5919",
-        "g": "1c30f71e43797168",
-        "group": "c91332c0.50c11",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "name": "Status Text",
-        "label": "{{label}}",
-        "format": "{{text}}",
-        "layout": "col-center",
-        "className": "",
-        "x": 170,
-        "y": 380,
         "wires": []
+    },
+    {
+        "id": "816f2b8081383fd3",
+        "type": "mqtt in",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Recorder (update)",
+        "topic": "server/status/recorder",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 60,
+        "wires": [
+            [
+                "97439d0fdd5a63d4"
+            ]
+        ]
+    },
+    {
+        "id": "e58ad2d8d0ee1dc5",
+        "type": "mqtt in",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Recorders (all)",
+        "topic": "server/status/recorders",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "97439d0fdd5a63d4"
+            ]
+        ]
+    },
+    {
+        "id": "97439d0fdd5a63d4",
+        "type": "function",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Recorders",
+        "func": "var dots = context.get(\"dots\", \"memoryOnly\");\ndots = (dots == undefined) || (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots, \"memoryOnly\")\n\nfunction boldIfTrue(text, compare){\n    if (text == compare) {\n        return \"<span style='font-weight:bold; background-color:#cc0000;'>\"+text+\"</span>\";\n    };\n    return text;\n}\n\n\nconst sortmsg = {\n    payload: {\n        command: \"setSort\",\n        arguments: [[{ column: \"id\", dir: \"asc\" }]],\n        returnPromise: false\n    }\n};\n\nvar recData = flow.get(\"recData\", \"memoryOnly\");\nif (recData === undefined) {\n    recData = {};\n    flow.set(\"recData\", recData, \"memoryOnly\");\n}\n\nif (msg.payload.type == \"recorders\") {\n    for (var i = 0; i < msg.payload.recorders.length; i++) {\n        var id = msg.payload.recorders[i].id\n        recData[id] = msg.payload.recorders[i]\n        recData[id].freq = (recData[id].freq / 1000000).toFixed(6)\n    }\n\n//<span style='backgroundcolor:#3FB449; font-weight:bold;'>asdasas</span>..\n\n} else if (msg.payload.type == \"recorder\") {\n    if (recData.len > 0) {\n        var id = msg.payload.recorder.id\n        recData[id] = msg.payload.recorder\n        recData[id].freq = (recData[id].freq / 1000000).toFixed(6)\n    }\n}\n\nfor (let i in recData) {\n    recData[i].squelched = boldIfTrue(recData[i].squelched, \"false\")\n    recData[i].rec_state_type = boldIfTrue(recData[i].rec_state_type, \"RECORDING\")\n    if (recData[i].rec_state_type == \"AVAILABLE\") {\n        recData[i].freq = \"\";\n    }\n}\n\nvar newmsg = { payload: Object.values(recData) };\nnode.send([[newmsg]]) //, sortmsg]]);\nnode.status({ fill: \"red\", shape: dots, text: msg.payload.type + \" \" + newmsg.payload.length });\nflow.set(\"recData\", recData, \"memoryOnly\");\nreturn;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 100,
+        "wires": [
+            [
+                "3201b07f5d35d45a"
+            ]
+        ]
+    },
+    {
+        "id": "3201b07f5d35d45a",
+        "type": "ui_table",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "group": "fa2b9cb252fcf55f",
+        "name": "Recorders",
+        "order": 1,
+        "width": 24,
+        "height": 11,
+        "columns": [
+            {
+                "field": "id",
+                "title": "ID",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "type",
+                "title": "Type",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "src_num",
+                "title": "Source",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "rec_num",
+                "title": "Recorder",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "freq",
+                "title": "Freq",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "count",
+                "title": "Count",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "duration",
+                "title": "Duration",
+                "width": "",
+                "align": "right",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "rec_state_type",
+                "title": "RecState",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "squelched",
+                "title": "Squelched",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 550,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "81efc56a59696d52",
+        "type": "mqtt in",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Call (start)",
+        "topic": "server/status/call_start",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 180,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ]
+    },
+    {
+        "id": "6a1a1a843081a284",
+        "type": "mqtt in",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Call (end)",
+        "topic": "server/status/call_end",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 220,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ]
+    },
+    {
+        "id": "f7e487d148bf483e",
+        "type": "ui_ui_control",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Refresh",
+        "events": "all",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "e077a1fd7774b673",
+                "97439d0fdd5a63d4"
+            ]
+        ]
+    },
+    {
+        "id": "0e652cf69b2587cc",
+        "type": "mqtt in",
+        "z": "6ae37af9c8689bca",
+        "g": "3ee187ca1e7c77fa",
+        "name": "Calls (active)",
+        "topic": "server/status/calls_active",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": "0",
+        "inputs": 0,
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ]
+    },
+    {
+        "id": "652bfa7b3aee55d4",
+        "type": "link in",
+        "z": "6ae37af9c8689bca",
+        "d": true,
+        "g": "3ee187ca1e7c77fa",
+        "name": "Calls (active)",
+        "links": [
+            "f1da1fc229689158"
+        ],
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "e077a1fd7774b673"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "fa2b9cb252fcf55f",
+        "type": "ui_group",
+        "name": "Calls",
+        "tab": "f3d0b12158ef2f71",
+        "order": 1,
+        "disp": true,
+        "width": 24,
+        "collapse": false,
+        "className": ""
     },
     {
         "id": "61de5090.0f5d9",
@@ -757,33 +545,11 @@
         "sessionExpiry": ""
     },
     {
-        "id": "c91332c0.50c11",
-        "type": "ui_group",
-        "name": "Commands",
-        "tab": "379a501f.53b59",
-        "order": 2,
-        "disp": false,
-        "width": "7",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "237da972.5d69a6",
-        "type": "ui_group",
-        "name": "Units",
-        "tab": "379a501f.53b59",
-        "order": 1,
-        "disp": false,
-        "width": 17,
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "379a501f.53b59",
+        "id": "f3d0b12158ef2f71",
         "type": "ui_tab",
-        "name": "CLMRN",
-        "icon": "fa-table",
-        "order": 4,
+        "name": "Calls",
+        "icon": "dashboard",
+        "order": 3,
         "disabled": false,
         "hidden": false
     }
