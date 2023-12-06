@@ -25,7 +25,11 @@ and the ["Everything over MQTT"](https://github.com/taclane/trunk-recorder-mqtt-
 
    <img src="/images/call-table.png" width="600px">
 
+5. Optional Console and Trunk Message logs
+
 For persistent data, it's recommended to save context storage to disk by editing the node-red `settings.js`:
+
+   <img src="/images/logging.png" width="600px">
 
 ```
     contextStorage: {
