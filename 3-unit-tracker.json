@@ -75,36 +75,6 @@
         "h": 162
     },
     {
-        "id": "8d6596bc117efcf3",
-        "type": "group",
-        "z": "08fcdfe3a144f4fb",
-        "style": {
-            "stroke": "#999999",
-            "stroke-opacity": "1",
-            "fill": "none",
-            "fill-opacity": "1",
-            "label": true,
-            "label-position": "nw",
-            "color": "#a4a4a4"
-        },
-        "nodes": [
-            "79f5d4587b3a2eb3",
-            "f709b030c70f2134",
-            "a408ec3418b4b689",
-            "a148bec32490b4ed",
-            "140c9ee6982ddcfd",
-            "8285f2fb062ef799",
-            "e17e55a8563f3f96",
-            "9a52e6acfd44cd9e",
-            "f451355e3d5fb023",
-            "bcc7dd7a30062b50"
-        ],
-        "x": 34,
-        "y": 519,
-        "w": 612,
-        "h": 202
-    },
-    {
         "id": "aa4f4ef6479a11f5",
         "type": "ui_table",
         "z": "08fcdfe3a144f4fb",
@@ -280,7 +250,7 @@
         "z": "08fcdfe3a144f4fb",
         "g": "f23ca1aff0c112a7",
         "name": "Units In",
-        "topic": "broke/units/shortname/#",
+        "topic": "server/units/shortname/#",
         "qos": "0",
         "datatype": "json",
         "broker": "61de5090.0f5d9",
@@ -326,7 +296,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 310,
+        "x": 330,
         "y": 60,
         "wires": []
     },
@@ -342,7 +312,7 @@
         "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({ fill: \"yellow\", shape: \"ring\", text: \"waiting\" });",
         "finalize": "",
         "libs": [],
-        "x": 310,
+        "x": 330,
         "y": 100,
         "wires": [
             [
@@ -575,243 +545,14 @@
         ]
     },
     {
-        "id": "79f5d4587b3a2eb3",
-        "type": "inject",
+        "id": "08ce8c0c3a6f0585",
+        "type": "comment",
         "z": "08fcdfe3a144f4fb",
-        "g": "8d6596bc117efcf3",
-        "name": "format table",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 150,
-        "y": 600,
-        "wires": [
-            [
-                "9a52e6acfd44cd9e"
-            ]
-        ]
-    },
-    {
-        "id": "f709b030c70f2134",
-        "type": "debug",
-        "z": "08fcdfe3a144f4fb",
-        "g": "8d6596bc117efcf3",
-        "name": "debug",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 530,
-        "y": 560,
+        "name": "README",
+        "info": "1. Set the MQTT server and topic in \"Units In\"\n    trunked: `trunk/units/shortname/#`\n    conventional: `trunk/units/convp25/end`\n\nUnit Messages must be enabled in the plugin config.",
+        "x": 720,
+        "y": 40,
         "wires": []
-    },
-    {
-        "id": "a408ec3418b4b689",
-        "type": "change",
-        "z": "08fcdfe3a144f4fb",
-        "g": "8d6596bc117efcf3",
-        "name": "send change",
-        "rules": [
-            {
-                "t": "delete",
-                "p": "ui_control",
-                "pt": "msg"
-            },
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "change",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 330,
-        "y": 640,
-        "wires": [
-            [
-                "140c9ee6982ddcfd"
-            ]
-        ]
-    },
-    {
-        "id": "a148bec32490b4ed",
-        "type": "link out",
-        "z": "08fcdfe3a144f4fb",
-        "g": "8d6596bc117efcf3",
-        "name": "To Unit Table",
-        "mode": "link",
-        "links": [
-            "9d2dc357fb53f130"
-        ],
-        "x": 550,
-        "y": 600,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "140c9ee6982ddcfd",
-        "type": "link out",
-        "z": "08fcdfe3a144f4fb",
-        "g": "8d6596bc117efcf3",
-        "name": "To Table Mgr.",
-        "mode": "link",
-        "links": [
-            "2354bb4d37f72c88"
-        ],
-        "x": 550,
-        "y": 640,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "8285f2fb062ef799",
-        "type": "function",
-        "z": "08fcdfe3a144f4fb",
-        "g": "8d6596bc117efcf3",
-        "name": "clear table",
-        "func": "\nmsg.payload={\n    command:\"clearData\",\n    arguments: [],\n    returnPromise: true\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 330,
-        "y": 680,
-        "wires": [
-            [
-                "140c9ee6982ddcfd",
-                "a148bec32490b4ed"
-            ]
-        ],
-        "info": "# clear data\n\nunfortunately this command (currently) do not send a promise back! So we have to pass it directly to the table handler"
-    },
-    {
-        "id": "e17e55a8563f3f96",
-        "type": "inject",
-        "z": "08fcdfe3a144f4fb",
-        "d": true,
-        "g": "8d6596bc117efcf3",
-        "name": "clear table",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 140,
-        "y": 680,
-        "wires": [
-            [
-                "8285f2fb062ef799"
-            ]
-        ]
-    },
-    {
-        "id": "9a52e6acfd44cd9e",
-        "type": "function",
-        "z": "08fcdfe3a144f4fb",
-        "g": "8d6596bc117efcf3",
-        "name": "send UI msg",
-        "func": "msg.ui_control = {\n    \"tabulator\": {\n        \"columns\": [\n            {\n                \"title\": \"Timestamp\",\n                \"field\": \"timestamp\",\n                \"headerTooltip\": \"timestamp of last change\",\n                \"visible\": false\n            }\n        ]\n    }\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 330,
-        "y": 600,
-        "wires": [
-            [
-                "f709b030c70f2134",
-                "a148bec32490b4ed",
-                "a408ec3418b4b689"
-            ]
-        ],
-        "info": "# clear data\n\nunfortunately this command (currently) do not send a promise back! So we have to pass it directly to the table handler"
-    },
-    {
-        "id": "f451355e3d5fb023",
-        "type": "inject",
-        "z": "08fcdfe3a144f4fb",
-        "d": true,
-        "g": "8d6596bc117efcf3",
-        "name": "button",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 130,
-        "y": 560,
-        "wires": [
-            [
-                "bcc7dd7a30062b50"
-            ]
-        ]
-    },
-    {
-        "id": "bcc7dd7a30062b50",
-        "type": "function",
-        "z": "08fcdfe3a144f4fb",
-        "g": "8d6596bc117efcf3",
-        "name": "fix data",
-        "func": "// Display Table \nvar tData = flow.get(\"tData\");\n// if (tData === undefined) {\n//     tData = {};\n//     flow.set(\"tData\", tData);\n// }\n\nvar tdata2 = {};\n\nfor (let unit in tData) {\n    tdata2[unit] = tData[unit]\n    //msg.topic = tData[unit].timestamp;\n    //msg.payload = new Date(tData[unit].timestamp).toLocaleString(\"en-US\", {timeZoneName: \"short\"});\n    //tData[unit].local = new Date(tData[unit].timestamp).toLocaleString(\"en-US\", { timeZoneName: \"short\" });\n    \n}\n\nnode.send(tdata2);\n\nflow.set(\"tData\", tdata2);\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 320,
-        "y": 560,
-        "wires": [
-            [
-                "f709b030c70f2134"
-            ]
-        ],
-        "info": "# clear data\n\nunfortunately this command (currently) do not send a promise back! So we have to pass it directly to the table handler"
     },
     {
         "id": "0a18b6643078267f",

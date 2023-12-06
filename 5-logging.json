@@ -1,0 +1,280 @@
+[
+    {
+        "id": "9574c40414c82172",
+        "type": "tab",
+        "label": "Logs",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "74ae1e9e61bf1ef4",
+        "type": "group",
+        "z": "9574c40414c82172",
+        "name": "Logging",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "6dbeb1b163cb0bd1",
+            "4ff9f60ac43ce85c",
+            "7f5ec0baf8c86b69",
+            "6f62016683f612bf",
+            "caacea272ccb23d1",
+            "96f70c33d127ff91"
+        ],
+        "x": 34,
+        "y": 19,
+        "w": 612,
+        "h": 162
+    },
+    {
+        "id": "6dbeb1b163cb0bd1",
+        "type": "mqtt in",
+        "z": "9574c40414c82172",
+        "g": "74ae1e9e61bf1ef4",
+        "name": "Console Logs",
+        "topic": "server/status/trunk_recorder/console",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "7f5ec0baf8c86b69"
+            ]
+        ]
+    },
+    {
+        "id": "4ff9f60ac43ce85c",
+        "type": "ui_table",
+        "z": "9574c40414c82172",
+        "g": "74ae1e9e61bf1ef4",
+        "group": "c92f3a3abfe5c202",
+        "name": "Log Table",
+        "order": 1,
+        "width": "24",
+        "height": "10",
+        "columns": [
+            {
+                "field": "time",
+                "title": "Time",
+                "width": "200",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "severity",
+                "title": "Severity",
+                "width": "100",
+                "align": "center",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "message",
+                "title": "Message",
+                "width": "",
+                "align": "left",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 560,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "7f5ec0baf8c86b69",
+        "type": "function",
+        "z": "9574c40414c82172",
+        "g": "74ae1e9e61bf1ef4",
+        "name": "Parse Console",
+        "func": "var dots = context.get(\"dots\", \"memoryOnly\") || \"ring\";\ndots = (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots, \"memoryOnly\")\n\nfunction boldIfTrue(text, compare){\n    if (text == compare) {\n        return \"<span style='font-weight:bold; background-color:#cc0000;'>\"+text+\"</span>\";\n    };\n    return text;\n}\n\nfunction monospace(text) {\n    return \"<span style='font-family:monospace;'>\" + text + \"</span>\";\n}\n\n// const sortmsg = {\n//     payload: {\n//         command: \"setSort\",\n//         arguments: [[{ column: \"id\", dir: \"asc\" }]],\n//         returnPromise: false\n//     }\n// };\n\n//<span style='backgroundcolor:#3FB449; font-weight:bold;'>asdasas</span>..\n\nvar args = {};\nargs[\"time\"] = msg.payload[\"console\"].time;\nargs[\"severity\"] = msg.payload[\"console\"].severity;\nargs[\"message\"] = monospace(msg.payload[\"console\"].log_msg);\n\n// Send to table \nmsg.payload = {\n    command: \"addData\",\n    arguments: [[args],true],\n    returnPromise: true\n}\nnode.status({ fill: \"red\", shape: dots, text: args[\"time\"] });\n\nreturn msg;\n\n\n// var newmsg = { payload: Object.values(recData) };\n// node.send([[newmsg]]) //, sortmsg]]);\n// return;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 60,
+        "wires": [
+            [
+                "4ff9f60ac43ce85c"
+            ]
+        ]
+    },
+    {
+        "id": "6f62016683f612bf",
+        "type": "mqtt in",
+        "z": "9574c40414c82172",
+        "g": "74ae1e9e61bf1ef4",
+        "name": "Trunk Messages",
+        "topic": "server/messages/#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "61de5090.0f5d9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "96f70c33d127ff91"
+            ]
+        ]
+    },
+    {
+        "id": "caacea272ccb23d1",
+        "type": "ui_table",
+        "z": "9574c40414c82172",
+        "g": "74ae1e9e61bf1ef4",
+        "group": "c92f3a3abfe5c202",
+        "name": "Trunk Table",
+        "order": 2,
+        "width": "24",
+        "height": "10",
+        "columns": [
+            {
+                "field": "time",
+                "title": "Time",
+                "width": "200",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "sys_name",
+                "title": "System",
+                "width": "100",
+                "align": "center",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "opcode",
+                "title": "Opcode",
+                "width": "175",
+                "align": "left",
+                "formatter": "html",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "meta",
+                "title": "Meta",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 550,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "96f70c33d127ff91",
+        "type": "function",
+        "z": "9574c40414c82172",
+        "g": "74ae1e9e61bf1ef4",
+        "name": "Parse Trunk Msg",
+        "func": "var dots = context.get(\"dots\", \"memoryOnly\") || \"ring\";\ndots = (dots == \"ring\") ? \"dot\" : \"ring\"\ncontext.set(\"dots\", dots, \"memoryOnly\")\n\nfunction boldIfTrue(text, compare){\n    if (text == compare) {\n        return \"<span style='font-weight:bold; background-color:#cc0000;'>\"+text+\"</span>\";\n    };\n    return text;\n}\n\nfunction monospace(text) {\n    return \"<span style='font-family:monospace;'>\" + text + \"</span>\";\n}\n\n// const sortmsg = {\n//     payload: {\n//         command: \"setSort\",\n//         arguments: [[{ column: \"id\", dir: \"asc\" }]],\n//         returnPromise: false\n//     }\n// };\n\n//<span style='backgroundcolor:#3FB449; font-weight:bold;'>asdasas</span>..\n\nif (msg.payload[\"message\"].meta != \"\") {\n    var args = {};\n    //args[\"time\"] = msg.payload.timestamp;\n    args[\"time\"] = new Date(msg.payload.timestamp * 1000).toLocaleString(\"en-US\", { timeZoneName: \"short\" });\n    args[\"sys_name\"] = msg.payload[\"message\"].sys_name + \"[\" + msg.payload[\"message\"].sys_num + \"]\";\n    args[\"meta\"] = msg.payload[\"message\"].meta;\n    args[\"opcode\"] = \"[\" + msg.payload[\"message\"].opcode + \"] \" + msg.payload[\"message\"].opcode_type;\n    //args[\"message\"] = monospace(msg.payload[\"console\"].log_msg);\n\n\n// Send to table \nmsg.payload = {\n    command: \"addData\",\n    arguments: [[args],true],\n    returnPromise: true\n}\nnode.status({ fill: \"red\", shape: dots, text: args[\"time\"] });\n\nreturn msg;\n}\n\n// var newmsg = { payload: Object.values(recData) };\n// node.send([[newmsg]]) //, sortmsg]]);\n// return;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 140,
+        "wires": [
+            [
+                "caacea272ccb23d1"
+            ]
+        ]
+    },
+    {
+        "id": "3fb7f4209f82d864",
+        "type": "comment",
+        "z": "9574c40414c82172",
+        "name": "README",
+        "info": "1. Set the MQTT server and topic in \"Console Logs\"\n    `trunk/status/trunk_recorder/console`\n2. Set the MQTT server and topic in \"Trunk messages\"\n    `trunk/messages/#`\n\nConlsole Messages and Trunk Messages must be enabled in the plugin config.",
+        "x": 720,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "61de5090.0f5d9",
+        "type": "mqtt-broker",
+        "name": "Local MQTT Server",
+        "broker": "192.168.1.20",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "true",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c92f3a3abfe5c202",
+        "type": "ui_group",
+        "name": "Group 1",
+        "tab": "e1cc61cca514bbb2",
+        "order": 1,
+        "disp": true,
+        "width": 28
+    },
+    {
+        "id": "e1cc61cca514bbb2",
+        "type": "ui_tab",
+        "name": "Logs",
+        "icon": "dashboard",
+        "order": 6,
+        "disabled": false,
+        "hidden": false
+    }
+]
