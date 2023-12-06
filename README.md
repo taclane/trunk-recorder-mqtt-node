@@ -27,10 +27,9 @@ and the ["Everything over MQTT"](https://github.com/taclane/trunk-recorder-mqtt-
 
 5. Optional Console and Trunk Message logs
 
-For persistent data, it's recommended to save context storage to disk by editing the node-red `settings.js`:
-
    <img src="/images/logging.png" width="600px">
 
+For persistent data, it's recommended to save context storage to disk by editing the node-red `settings.js`:
 ```
     contextStorage: {
         default: {
